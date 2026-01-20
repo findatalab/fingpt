@@ -1,0 +1,14 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+# Environment variables
+*.env
+.venv
+# IDE
+.vscode/
+.deepeval
+# Temporary files
+tmp/
+# Data files
+data_files/

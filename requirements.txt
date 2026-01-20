@@ -1,0 +1,11 @@
+haystack-ai
+haystack-experimental>=0.15.0
+ollama-haystack
+deepeval-haystack
+markdown-it-py 
+mdit_plain
+PyYAML
+pypdf
+sentence-transformers>=4.1.0
+huggingface_hub>=0.23.0
+python-dotenv
