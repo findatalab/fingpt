@@ -1,7 +1,12 @@
+import math
+import time
+
 import yaml
 
+TEST_FILE = "test/questions20.yaml"
+
 try:
-    with open("test/questions.yaml", "r") as file:
+    with open(TEST_FILE, "r", encoding="utf-8") as file:
         questions_dict = yaml.safe_load(file)
         # You can now access data like a Python dictionary
         print(f"Success read {len(questions_dict)} questions.")
@@ -23,13 +28,13 @@ pipeline.connect("retriever", "answer_builder.documents")
 def get_contexts_and_responses(questions, pipeline):
     contexts = []
     responses = []
-    for question in questions:
+    for i, question in enumerate(questions):
         response = pipeline.run(
             data={
                 "embedder": {"text": question},
                 "prompt_builder": {"query": question},
-                "message_retriever": {"chat_history_id": chat_history_id},
-                "message_writer": {"chat_history_id": chat_history_id},
+                "message_retriever": {"chat_history_id": f"chat_{i}"},
+                "message_writer": {"chat_history_id": f"chat_{i}"},
                 "answer_builder": {"query": question},
             },
             include_outputs_from={"llm"},
@@ -41,24 +46,90 @@ def get_contexts_and_responses(questions, pipeline):
         responses.append(response["answer_builder"]["answers"][0].data)
     return contexts, responses
 
+
 ground_truths = [q['answer'] for q in questions_dict]
 questions = [q['question'] for q in questions_dict]
 contexts, responses = get_contexts_and_responses(questions, pipeline)
 
-from haystack import Pipeline
-from haystack_integrations.components.evaluators.deepeval import DeepEvalEvaluator, DeepEvalMetric
 from deepeval.models.llms import OllamaModel
+from deepeval.metrics import ContextualPrecisionMetric
+from deepeval.test_case import LLMTestCase
 
-context_precision_pipeline = Pipeline()
-evaluator = DeepEvalEvaluator(
-    metric=DeepEvalMetric.CONTEXTUAL_PRECISION, 
-    metric_params={
-        "model": OllamaModel("gemma3")  
+metric = ContextualPrecisionMetric(
+    model=OllamaModel(
+        model="gemma3",
+        timeout=180
+    ),
+    async_mode=False,
+)
+
+all_results = []
+
+for i, question in enumerate(questions):
+    print(f"\nEvaluating question {i + 1}/{len(questions)}")
+
+    try:
+        test_case = LLMTestCase(
+            input=question,
+            actual_output=responses[i],
+            expected_output=ground_truths[i],
+            retrieval_context=contexts[i],
+        )
+
+        metric.measure(test_case)
+
+        result = {
+            "question": question,
+            "score": metric.score,
+            "reason": metric.reason,
+        }
+
+        all_results.append(result)
+
+        print(f"✅ Score: {metric.score:.3f}")
+        print(f"🧠 Reason: {metric.reason}")
+
+    except Exception as e:
+        print(f"❌ Evaluation failed: {e}")
+
+        all_results.append({
+            "question": question,
+            "score": None,
+            "error": str(e),
         })
 
-context_precision_pipeline.add_component("evaluator", evaluator)
+    time.sleep(1)
 
-evaluation_results = context_precision_pipeline.run(
-    {"evaluator": {"questions": questions, "contexts": contexts, "ground_truths": ground_truths, "responses": responses}}
-)
-print(evaluation_results["evaluator"]["results"])
+
+valid_scores = [r["score"] for r in all_results if isinstance(r.get("score"), (int, float))]
+
+total_questions = len(all_results)
+evaluated_questions = len(valid_scores)
+
+avg_score = sum(valid_scores) / evaluated_questions if evaluated_questions else float("nan")
+min_score = min(valid_scores) if evaluated_questions else float("nan")
+max_score = max(valid_scores) if evaluated_questions else float("nan")
+perfect_scores = sum(1 for s in valid_scores if math.isclose(s, 1.0))
+perfect_ratio = (perfect_scores / evaluated_questions * 100) if evaluated_questions else 0
+
+
+print("\n" + "=" * 80)
+print("FINAL RESULTS")
+print("=" * 80)
+
+for r in all_results:
+    print("─" * 50)
+    print("Question:", r["question"])
+    print("Result:", r)
+
+print("\n" + "=" * 80)
+print("SUMMARY STATISTICS")
+print("=" * 80)
+print(f"Total questions: {total_questions}")
+print(f"Successfully evaluated: {evaluated_questions}")
+print(f"Average Contextual Precision: {avg_score:.3f}")
+print(f"Min score: {min_score:.3f}")
+print(f"Max score: {max_score:.3f}")
+print(f"Count(score == 1): {perfect_scores} "
+      f"({perfect_ratio:.1f}%)")
+print("=" * 80)
