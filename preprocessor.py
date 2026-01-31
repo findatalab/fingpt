@@ -6,6 +6,7 @@ from haystack.components.joiners import DocumentJoiner
 from haystack.components.embedders import SentenceTransformersDocumentEmbedder
 from haystack import Pipeline
 from haystack.document_stores.in_memory import InMemoryDocumentStore
+from pathlib import Path
 
 document_store = InMemoryDocumentStore()
 file_type_router = FileTypeRouter(mime_types=["text/plain", "application/pdf", "text/markdown"])
@@ -46,6 +47,5 @@ preprocessing_pipeline.connect("document_cleaner", "document_splitter")
 preprocessing_pipeline.connect("document_splitter", "document_embedder")
 preprocessing_pipeline.connect("document_embedder", "document_writer")
 
-from pathlib import Path
 
 preprocessing_pipeline.run({"file_type_router": {"sources": list(Path(output_dir).glob("**/*"))}})

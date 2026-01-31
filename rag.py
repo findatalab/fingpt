@@ -1,34 +1,29 @@
 import os
 import dotenv
 
-dotenv.load_dotenv('yandex.env')
-if "OPENAI_API_KEY" not in os.environ:
-    raise ValueError("OPENAI_API_KEY not set in environment variables.")
-
 from haystack_experimental.chat_message_stores.in_memory import InMemoryChatMessageStore
 from haystack_experimental.components.retrievers import ChatMessageRetriever
 from haystack_experimental.components.writers import ChatMessageWriter
 from haystack.components.embedders import SentenceTransformersTextEmbedder
 from haystack.components.retrievers.in_memory import InMemoryEmbeddingRetriever
-
-# Chat History components
-message_store = InMemoryChatMessageStore()
-message_retriever = ChatMessageRetriever(message_store)
-message_writer = ChatMessageWriter(message_store)
-
 from haystack import Pipeline
 from haystack.components.builders import ChatPromptBuilder
 from haystack.components.converters import OutputAdapter
 from haystack.dataclasses import ChatMessage
 from haystack_integrations.components.generators.ollama import OllamaChatGenerator
 
-from haystack.components.converters import (
-    MarkdownToDocument,
-    PyPDFToDocument,
-    TextFileToDocument,
-)
 
 from preprocessor import document_store
+
+dotenv.load_dotenv('yandex.env')
+if "OPENAI_API_KEY" not in os.environ:
+    raise ValueError("OPENAI_API_KEY not set in environment variables.")
+
+# Chat History components
+message_store = InMemoryChatMessageStore()
+message_retriever = ChatMessageRetriever(message_store)
+message_writer = ChatMessageWriter(message_store)
+
 
 pipeline = Pipeline()
 
