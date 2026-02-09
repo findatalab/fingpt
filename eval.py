@@ -1,4 +1,6 @@
+import datetime
 import time
+from pathlib import Path
 from typing import List, Dict, Any
 from deepeval.models.llms import OllamaModel
 from deepeval.metrics import ContextualPrecisionMetric, ContextualRecallMetric
@@ -67,37 +69,37 @@ def get_contexts_and_responses(questions, pipeline):
     return all_contexts, responses
 
 
-gold_faq_ids = [q['id'] for q in questions_dict]
+gold_ids = [q['id'] for q in questions_dict]
 ground_truths = [q['answer'] for q in questions_dict]
 questions = [q['question'] for q in questions_dict]
 contexts, responses = get_contexts_and_responses(questions, pipeline)
 
 # ----------------------------
-# IR metrics by faq_id
+# IR metrics by chunk_id
 # ----------------------------
-def first_relevant_rank_by_faq_id(ranked_contexts, gold_faq_id):
+def first_relevant_rank_by_chunk_id(ranked_contexts, gold_id):
     for item in ranked_contexts:
         meta = item.get("meta") or {}
-        if meta.get("faq_id") == gold_faq_id:
+        if meta.get("chunk_id") == gold_id:
             return item["rank"]
     return None
 
 
-def hit_at_k_by_faq_id(ranked_contexts, gold_faq_id, k):
-    return 1.0 if first_relevant_rank_by_faq_id(ranked_contexts[:k], gold_faq_id) else 0.0
+def hit_at_k_by_chunk_id(ranked_contexts, gold_id, k):
+    return 1.0 if first_relevant_rank_by_chunk_id(ranked_contexts[:k], gold_id) else 0.0
 
 
-def precision_at_k_by_faq_id(ranked_contexts, gold_faq_id, k):
+def precision_at_k_by_chunk_id(ranked_contexts, gold_id, k):
     relevant = 0
     for item in ranked_contexts[:k]:
         meta = item.get("meta") or {}
-        if meta.get("source_type") == "faq" and meta.get("faq_id") == gold_faq_id:
+        if meta.get("chunk_id") == gold_id:
             relevant += 1
     return relevant / k
 
 
-def mrr_by_faq_id(ranked_contexts, gold_faq_id):
-    r = first_relevant_rank_by_faq_id(ranked_contexts, gold_faq_id)
+def mrr_by_chunk_id(ranked_contexts, gold_id):
+    r = first_relevant_rank_by_chunk_id(ranked_contexts, gold_id)
     return 0.0 if r is None else 1.0 / r
 
 
@@ -131,11 +133,11 @@ for i, question in enumerate(questions):
 
     ranked_ctx = contexts[i]
     ctx_texts = [c["content"] for c in ranked_ctx]
-    gold_faq_id = gold_faq_ids[i]
+    gold_chunks_id = gold_ids[i]
 
-    # --- IR metrics (faq_id) ---
+    # --- IR metrics ---
     ir_metrics = {
-        "gold_faq_id": gold_faq_id,
+        "gold_chunks_id": gold_chunks_id,
         "hit@1": None,
         "hit@3": None,
         "precision@1": None,
@@ -144,22 +146,22 @@ for i, question in enumerate(questions):
         "first_relevant_rank": None,
     }
 
-    if gold_faq_id is not None:
-        r = first_relevant_rank_by_faq_id(ranked_ctx, gold_faq_id)
+    if gold_chunks_id is not None:
+        r = first_relevant_rank_by_chunk_id(ranked_ctx, gold_chunks_id)
 
         ir_metrics.update({
             "first_relevant_rank": r,
-            "hit@1": hit_at_k_by_faq_id(ranked_ctx, gold_faq_id, 1),
-            "hit@3": hit_at_k_by_faq_id(ranked_ctx, gold_faq_id, 3),
-            "precision@1": precision_at_k_by_faq_id(ranked_ctx, gold_faq_id, 1),
-            "precision@3": precision_at_k_by_faq_id(ranked_ctx, gold_faq_id, 3),
-            "mrr": mrr_by_faq_id(ranked_ctx, gold_faq_id),
+            "hit@1": hit_at_k_by_chunk_id(ranked_ctx, gold_chunks_id, 1),
+            "hit@3": hit_at_k_by_chunk_id(ranked_ctx, gold_chunks_id, 3),
+            "precision@1": precision_at_k_by_chunk_id(ranked_ctx, gold_chunks_id, 1),
+            "precision@3": precision_at_k_by_chunk_id(ranked_ctx, gold_chunks_id, 3),
+            "mrr": mrr_by_chunk_id(ranked_ctx, gold_chunks_id),
         })
 
     # --- LLM-as-judge metrics ---
     judge_metrics: Dict[str, Any] = {
-        "context_precision": {"score": None, "reason": None},
-        "context_recall": {"score": None, "reason": None},
+        "contextual_precision": {"score": None, "reason": None},
+        "contextual_recall": {"score": None, "reason": None},
     }
 
     try:
@@ -173,11 +175,11 @@ for i, question in enumerate(questions):
         contextual_precision_metric.measure(test_case)
         contextual_recall_metric.measure(test_case)
 
-        judge_metrics["context_precision"] = {
+        judge_metrics["contextual_precision"] = {
             "score": contextual_precision_metric.score,
             "reason": contextual_precision_metric.reason,
         }
-        judge_metrics["context_recall"] = {
+        judge_metrics["contextual_recall"] = {
             "score": contextual_recall_metric.score,
             "reason": contextual_recall_metric.reason,
         }
@@ -196,9 +198,11 @@ for i, question in enumerate(questions):
         print(f"🧠 Reason: {contextual_recall_metric.reason}")
 
         result = {
+            "id": i,
             "question": question,
-            "actual_output": responses[i],
-            "expected_output": ground_truths[i],
+            # "contexts": ctx_texts, # contexts[i],
+            "response": responses[i],
+            "ground_truth": ground_truths[i],
             "ir_metrics": ir_metrics,
             "judge_metrics": judge_metrics,
         }
@@ -211,8 +215,8 @@ for i, question in enumerate(questions):
         ir_p1.append(ir_metrics["precision@1"])
         ir_p3.append(ir_metrics["precision@3"])
         ir_mrr.append(ir_metrics["mrr"])
-        judge_prec.append(judge_metrics["context_precision"]["score"])
-        judge_rec.append(judge_metrics["context_recall"]["score"])
+        judge_prec.append(judge_metrics["contextual_precision"]["score"])
+        judge_rec.append(judge_metrics["contextual_recall"]["score"])
 
     except Exception as e:
         print(f"❌ Evaluation failed: {e}")
@@ -248,3 +252,15 @@ for r in all_results:
         print("Error:", r["error"])
     print("IR metrics:", r.get("ir_metrics"))
     print("Judge metrics:", r.get("judge_metrics"))
+
+report_name = f"{datetime.datetime.today().strftime('%Y-%m-%d-%H-%M-%S')}_" + Path(TEST_FILE).stem + ".yaml"
+
+with open(f"reports/{report_name}", "w", encoding="utf-8") as f:
+    yaml.dump(
+        all_results,
+        f,
+        allow_unicode=True,
+        sort_keys=False,
+        indent=4,
+        default_flow_style=False,
+    )
