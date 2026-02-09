@@ -9,7 +9,6 @@ from haystack import Pipeline
 from haystack.document_stores.in_memory import InMemoryDocumentStore
 
 from components.doc_logger import DocLogger
-from components.yaml_to_docs import YamlFAQToDocuments
 
 document_store = InMemoryDocumentStore()
 
@@ -24,10 +23,8 @@ file_type_router = FileTypeRouter(
 text_file_converter = TextFileToDocument()
 markdown_converter = MarkdownToDocument()
 pdf_converter = PyPDFToDocument()
-yaml_converter = YamlFAQToDocuments()
 
-document_joiner_raw = DocumentJoiner()
-document_joiner_final = DocumentJoiner()
+document_joiner = DocumentJoiner()
 
 log_after_split = DocLogger("after_split", show=5000)
 
@@ -49,10 +46,8 @@ preprocessing_pipeline.add_component(instance=file_type_router, name="file_type_
 preprocessing_pipeline.add_component(instance=text_file_converter, name="text_file_converter")
 preprocessing_pipeline.add_component(instance=markdown_converter, name="markdown_converter")
 preprocessing_pipeline.add_component(instance=pdf_converter, name="pypdf_converter")
-preprocessing_pipeline.add_component(instance=yaml_converter, name="yaml_converter")
 
-preprocessing_pipeline.add_component(instance=document_joiner_raw, name="document_joiner_raw")
-preprocessing_pipeline.add_component(instance=document_joiner_final, name="document_joiner_final")
+preprocessing_pipeline.add_component(instance=document_joiner, name="document_joiner")
 
 preprocessing_pipeline.add_component(instance=document_cleaner, name="document_cleaner")
 preprocessing_pipeline.add_component(instance=document_splitter, name="document_splitter")
@@ -67,18 +62,15 @@ preprocessing_pipeline.connect("file_type_router.text/plain", "text_file_convert
 preprocessing_pipeline.connect("file_type_router.application/pdf", "pypdf_converter.sources")
 preprocessing_pipeline.connect("file_type_router.text/markdown", "markdown_converter.sources")
 
-preprocessing_pipeline.connect("text_file_converter", "document_joiner_raw")
-preprocessing_pipeline.connect("pypdf_converter", "document_joiner_raw")
-preprocessing_pipeline.connect("markdown_converter", "document_joiner_raw")
+preprocessing_pipeline.connect("text_file_converter", "document_joiner")
+preprocessing_pipeline.connect("pypdf_converter", "document_joiner")
+preprocessing_pipeline.connect("markdown_converter", "document_joiner")
 
-preprocessing_pipeline.connect("document_joiner_raw", "document_cleaner")
+preprocessing_pipeline.connect("document_joiner", "document_cleaner")
 preprocessing_pipeline.connect("document_cleaner", "document_splitter")
 
-preprocessing_pipeline.connect("document_splitter", "document_joiner_final")
+preprocessing_pipeline.connect("document_splitter", "log_after_split")
 
-preprocessing_pipeline.connect("yaml_converter", "document_joiner_final")
-
-preprocessing_pipeline.connect("document_joiner_final", "log_after_split")
 preprocessing_pipeline.connect("log_after_split", "document_embedder")
 
 preprocessing_pipeline.connect("document_embedder", "document_writer")
@@ -91,8 +83,7 @@ yaml_files = [p for p in all_files if p.is_file() and p.suffix.lower() in [".yml
 other_files = [p for p in all_files if p.is_file() and p.suffix.lower() not in [".yml", ".yaml"]]
 
 preprocessing_pipeline.run({
-    "file_type_router": {"sources": other_files},
-    "yaml_converter": {"sources": yaml_files},
+    "file_type_router": {"sources": other_files}
 })
 # print(document_store.count_documents())
 # print(document_store.filter_documents()[:3])
