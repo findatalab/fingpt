@@ -3,7 +3,7 @@ import logging
 import dotenv
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
-from rag import pipeline
+from components.rag import pipeline
 
 
 logging.basicConfig(
