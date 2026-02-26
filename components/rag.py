@@ -15,9 +15,15 @@ from haystack_integrations.components.generators.ollama import OllamaChatGenerat
 
 from components.preprocessor import document_store
 
-dotenv.load_dotenv('yandex.env')
+dotenv.load_dotenv("yandex.env")
 if "OPENAI_API_KEY" not in os.environ:
     raise ValueError("OPENAI_API_KEY not set in environment variables.")
+
+try:
+    with open("components/system_prompt.txt", "r", encoding="utf-8") as file:
+        system_prompt = file.read()
+except FileNotFoundError:
+    raise ValueError("Error: The prompt template file was not found.")
 
 # Chat History components
 message_store = InMemoryChatMessageStore()
@@ -42,17 +48,14 @@ pipeline.add_component(
     "prompt_builder",
     ChatPromptBuilder(
         template=[
-            ChatMessage.from_system(
-                """Ты консультант для поступающих в Финансовый Университет. 
-                Отвечай на вопросы, используя только предоставленный контекст. 
-                Если ответа нет в контексте, скажи, что не знаешь ответа.
-                Используй простой текстовый формат без разметки."""),
+            ChatMessage.from_system(system_prompt),
             ChatMessage.from_user(
-                """ Контекст:
+                """ Используй контекст: 
 {% for document in documents %}
     {{ document.content }}
-{% endfor %}
-Вопрос: {{query}}"""
+{% endfor %} 
+
+Ответь на вопрос: {{query}}"""
             ),
         ],
         required_variables="*",

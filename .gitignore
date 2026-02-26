@@ -11,5 +11,3 @@ __pycache__/
 .deepeval
 # Temporary files
 tmp/
-# Data files
-data_files/
