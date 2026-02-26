@@ -13,7 +13,7 @@ from haystack.dataclasses import ChatMessage
 from haystack_integrations.components.generators.ollama import OllamaChatGenerator
 
 
-from preprocessor import document_store
+from components.preprocessor import document_store
 
 dotenv.load_dotenv('yandex.env')
 if "OPENAI_API_KEY" not in os.environ:

@@ -1,4 +1,4 @@
-from rag import pipeline
+from components.rag import pipeline
 
 chat_history_id = "user_123_session_1"
 
