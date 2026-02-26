@@ -30,8 +30,8 @@ pipeline = Pipeline()
 pipeline.add_component(
     "embedder",
     SentenceTransformersTextEmbedder(
-        model="sentence-transformers/all-MiniLM-L6-v2",
-        local_files_only=True),
+        model="deepvk/USER-base", local_files_only=False
+    ),
 )
 pipeline.add_component(
     "retriever", InMemoryEmbeddingRetriever(document_store=document_store)
@@ -60,7 +60,10 @@ pipeline.add_component(
 )
 
 pipeline.add_component(
-    "llm", OllamaChatGenerator(model="gemma3", url="http://localhost:11434")
+    "llm",
+    OllamaChatGenerator(
+        model="yandex/YandexGPT-5-Lite-8B-instruct-GGUF", url="http://localhost:11434"
+    ),
 )
 
 

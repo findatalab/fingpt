@@ -38,8 +38,8 @@ document_splitter = DocumentSplitter(
 
 
 document_embedder = SentenceTransformersDocumentEmbedder(
-    model="sentence-transformers/all-MiniLM-L6-v2", 
-    local_files_only=True)
+    model="deepvk/USER-base", 
+    local_files_only=False)
 document_writer = DocumentWriter(document_store)
 
 preprocessing_pipeline = Pipeline()
@@ -86,5 +86,3 @@ other_files = [p for p in all_files if p.is_file() and p.suffix.lower() not in [
 preprocessing_pipeline.run({
     "file_type_router": {"sources": other_files}
 })
-# print(document_store.count_documents())
-# print(document_store.filter_documents()[:3])

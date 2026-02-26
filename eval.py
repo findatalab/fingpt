@@ -106,7 +106,7 @@ def mrr_by_chunk_id(ranked_contexts, gold_id):
 # ----------------------------
 # LLM-as-judge metrics
 # ----------------------------
-judge_model = OllamaModel(model="gemma3", timeout=180)
+judge_model = OllamaModel(model="yandex/YandexGPT-5-Lite-8B-instruct-GGUF", timeout=180)
 
 contextual_precision_metric = ContextualPrecisionMetric(
     model=judge_model, async_mode=False

@@ -1,0 +1,874 @@
+Model: yandex/YandexGPT-5-Lite-8B-instruct-GGUF
+
+-   id: 0
+    question: Какие документы необходимы для подачи заявления на поступление?
+    response: ' Для поступления в Финансовый университет поступающий должен представить
+        следующие документы:
+
+        * заявление о приёме;
+
+        * документы, необходимые для поступления (оригиналы или копии);
+
+        * согласие на зачисление (для зачисления на места в рамках контрольных цифр
+        приёма) — представляется в электронном виде посредством проставления на ЕПГУ
+        электронной отметки о согласии на зачисление или на бумажном носителе посредством
+        подачи в Финансовый университет заявления о согласии на зачисление;
+
+        * договор об образовании (для зачисления на платные места).
+
+
+        Также могут потребоваться:
+
+        * документы, подтверждающие индивидуальные достижения (по усмотрению поступающего);
+
+        * документ, подтверждающий прохождение централизованного тестирования или
+        экзамена (если используется такой формат вступительных испытаний);
+
+        * документ, подтверждающий инвалидность или ограниченные возможности здоровья
+        (при необходимости создания специальных условий для сдачи внутренних вступительных
+        испытаний);
+
+        * иные документы по усмотрению поступающего;
+
+        * фотография поступающего.'
+    ground_truth: 'Для подачи заявления на программы бакалавриата и специалитета поступающий
+        предоставляет:
+
+        1) документ, удостоверяющий личность и гражданство;
+
+        2) документ об образовании (можно один или несколько; иностранный документ
+        — со свидетельством о признании, если иное не предусмотрено законодательством
+        или международными договорами);
+
+        3) документ, подтверждающий регистрацию в системе индивидуального (персонифицированного)
+        учета (при наличии);
+
+        4) заявление о согласии на обработку персональных данных;
+
+        5) при необходимости — документы, подтверждающие инвалидность или ограниченные
+        возможности здоровья (для сдачи внутренних экзаменов и создания специальных
+        условий);
+
+        6) при использовании результатов централизованного тестирования или экзамена
+        — подтверждающий документ;
+
+        7) при использовании особых прав и льгот — документы, подтверждающие такие
+        права;
+
+        8) документы, подтверждающие индивидуальные достижения (по желанию);
+
+        9) иные документы — по усмотрению поступающего.
+
+        10) фотография поступающего.
+
+        Документы подаются в оригинале или копии (электронного образа) без заверения.
+        При подаче через ЕПГУ документы считаются представленными, если их данные
+        подтверждены в государственных системах.
+
+        '
+    ir_metrics:
+        gold_chunks_id: 1
+        hit@1: 0.0
+        hit@3: 0.0
+        precision@1: 0.0
+        precision@3: 0.0
+        mrr: 0.0
+        first_relevant_rank: null
+    judge_metrics:
+        contextual_precision:
+            score: 0
+            reason: The score is 0.00 because all nodes ranked from 1 to 10 do not
+                provide the requested list of documents for application submission;
+                they only describe the process and stages of admission, which are
+                irrelevant to the question.
+        contextual_recall:
+            score: 0.0
+            reason: The score is 0.00 because the retrieval context does not provide
+                any information about the specific documents required for admission,
+                which are detailed in the expected output.
+-   id: 1
+    question: Каковы сроки приёма документов в этом году?
+    response: ' В тексте нет конкретной информации о сроках приёма документов в этом
+        году. Однако указано, что не позднее 20 января 2025 года на официальном сайте
+        должна быть размещена информация о приёме на обучение, включая сроки проведения
+        приёма.'
+    ground_truth: 'Сроки приёма документов в 2026 году зависят от типа мест и формы
+        поступления.
+
+
+        Для поступления на бюджетные места (контрольные цифры приёма):
+
+        – приём заявлений и документов начинается 20 июня 2026 года;
+
+        – приём документов со сдачей вступительных испытаний завершается 15 июля 2026
+        года до 17:00 (МСК);
+
+        – приём документов без сдачи вступительных испытаний завершается 25 июля 2026
+        года до 17:00 (МСК).
+
+
+        Вступительные испытания проводятся с 16 по 25 июля 2026 года.
+
+        Конкурсные списки публикуются 27 июля 2026 года.
+
+
+        Этапы зачисления на бюджет:
+
+        – приоритетный этап: согласие на зачисление до 1 августа (до 12:00), приказы
+        — 3 августа;
+
+        – основной этап: согласие до 5 августа (до 12:00), приказы — 7 августа;
+
+        – дополнительный этап: согласие до 9 августа (до 12:00), приказы — 11 августа.
+
+
+        Дополнительный приём на бюджет:
+
+        – приём документов: с 12 по 21 августа 2026 года;
+
+        – вступительные испытания: с 17 по 21 августа 2026 года;
+
+        – конкурсные списки — 22 августа;
+
+        – зачисление завершается 28 августа 2026 года.
+
+
+        Для поступления на платные места:
+
+        – приём заявлений и документов: с 20 июня по 12 августа 2026 года (до 17:00);
+
+        – вступительные испытания: с 16 июля по 13 августа 2026 года;
+
+        – заключение договоров: с 20 июня по 14 августа 2026 года (до 17:00);
+
+        – конкурсные списки публикуются 15 августа 2026 года;
+
+        – зачисление завершается не позднее 18 августа 2026 года.
+
+        '
+    ir_metrics:
+        gold_chunks_id: 2
+        hit@1: 0.0
+        hit@3: 0.0
+        precision@1: 0.0
+        precision@3: 0.0
+        mrr: 0.0
+        first_relevant_rank: null
+    judge_metrics:
+        contextual_precision:
+            score: 0
+            reason: The score is 0.00 because all nodes ranked from 1 to 10 provide
+                information that does not relate to the input question about deadlines
+                for accepting documents. They only discuss quotas and places, which
+                are irrelevant to the query.
+        contextual_recall:
+            score: 0.0
+            reason: The score is 0.00 because none of the sentences in the expected
+                output relate to any nodes in the retrieval context.
+-   id: 2
+    question: Сколько направлений (специальностей) можно выбрать при подаче заявления?
+    response: ' В тексте нет прямого ответа на вопрос о том, сколько направлений (специальностей)
+        можно выбрать при подаче заявления. Однако из контекста следует, что приём
+        проводится по различным направлениям подготовки в рамках специальностей или
+        специализаций. При этом Финансовый университет проводит однопрофильный конкурс
+        в пределах специальности или направления подготовки. Это означает, что поступающий
+        может участвовать в конкурсе по одной или нескольким образовательным программам
+        в рамках выбранной специальности или направления подготовки.'
+    ground_truth: 'При подаче заявления поступающий может выбрать до 5 специальностей
+        и (или) направлений подготовки.
+
+        Одновременно можно участвовать в конкурсе по разным конкурсным группам в рамках
+        каждой выбранной специальности или направления.
+
+        Также поступающий вправе подать документы одновременно не более чем в 5 образовательных
+        организаций.
+
+        '
+    ir_metrics:
+        gold_chunks_id: 3
+        hit@1: 0.0
+        hit@3: 0.0
+        precision@1: 0.0
+        precision@3: 0.0
+        mrr: 0.0
+        first_relevant_rank: null
+    judge_metrics:
+        contextual_precision:
+            score: 0
+            reason: The score is 0.00 because all nodes ranked are irrelevant to the
+                input question, as they do not provide information about the number
+                of specialties or fields of study that can be chosen when applying.
+                All five nodes have the same reason for being irrelevant.
+        contextual_recall:
+            score: 1.0
+            reason: The score is 1.00 because all sentences in the expected output
+                are well-aligned with the context implied by the nodes in the retrieval
+                context.
+-   id: 3
+    question: Какие вступительные испытания нужно пройти (ЕГЭ, дополнительные экзамены)?
+    response: ' При приёме на обучение по программам бакалавриата и программам специалитета
+        в Финансовом университете поступающие сдают вступительные испытания по следующим
+        правилам:
+
+
+        1. Поступающие на базе среднего общего образования сдают общеобразовательные
+        вступительные испытания, проводимые Финансовым университетом самостоятельно,
+        или используют результаты ЕГЭ.
+
+        2. Лица, поступающие на базе профессионального образования, могут сдавать
+        вступительные испытания на базе профессионального образования, общеобразовательные
+        вступительные испытания, проводимые Финансовым университетом, или использовать
+        результаты ЕГЭ.
+
+        3. Результаты ЕГЭ оцениваются по стобалльной шкале.
+
+        4. Минимальное количество баллов устанавливается локальным нормативным актом
+        Финансового университета.
+
+        5. Для победителей и призёров олимпиад школьников Финансовый университет устанавливает
+        количество баллов ЕГЭ или общеобразовательного вступительного испытания в
+        размере не менее 75 баллов.
+
+        6. Лица, имеющие право на приём на места в пределах отдельной квоты по результатам
+        ЕГЭ или вступительных испытаний, могут сдавать внутренние общеобразовательные
+        вступительные испытания.
+
+
+        Перечень вступительных испытаний и их приоритетность устанавливаются Финансовым
+        университетом.'
+    ground_truth: "Вступительные испытания включают:\n1) результаты ЕГЭ по предметам,\
+        \ требуемым для выбранной специальности;\n2) возможно, дополнительные вступительные\
+        \ испытания для абитуриентов, которые поступают в вуз с привилегиями, и им\
+        \ не нужно сдавать вступительные экзамены. \nНапример, зачисление вне конкурса\
+        \ без экзаменов гарантировано: \nпобедителям и призёрам заключительного этапа\
+        \ Всероссийской олимпиады школьников;\nчленам сборных команд России, которые\
+        \ участвовали в международных олимпиадах;\nпобедителям и призёрам олимпиад\
+        \ 1, 2 и 3 уровня из перечня Минобрнауки.\n"
+    ir_metrics:
+        gold_chunks_id: 4
+        hit@1: 0.0
+        hit@3: 0.0
+        precision@1: 0.0
+        precision@3: 0.0
+        mrr: 0.0
+        first_relevant_rank: null
+    judge_metrics:
+        contextual_precision:
+            score: 1.0
+            reason: The score is 1.00 because all relevant nodes are ranked higher
+                than irrelevant ones. Relevant nodes provide comprehensive information
+                about various aspects of entrance exams, including USE results and
+                additional internal tests. Irrelevant nodes (6th and 7th) discuss
+                unrelated topics such as application procedures and target training
+                specifics.
+        contextual_recall:
+            score: 0.6666666666666666
+            reason: The score is 0.67 because while some sentences (1 and 2) are well-aligned
+                with nodes 19 and 20 in the retrieval context, others (3) do not find
+                direct support there.
+-   id: 4
+    question: Каков минимальный проходной балл по каждому предмету?
+    response: ' В тексте указано, что Финансовый университет самостоятельно устанавливает
+        перечень вступительных испытаний, максимальное количество баллов и минимальное
+        количество баллов, подтверждающее успешное прохождение вступительного испытания.
+        Конкретные цифры не приведены.'
+    ground_truth: "Минимальные проходные баллы зависят от формы обучения и типа мест.\n\
+        \nОчная форма обучения (бакалавриат и специалитет, кроме филиалов):\n– на\
+        \ бюджетные места: иностранный язык — 65 баллов, все остальные предметы —\
+        \ не менее 60 баллов;\n– на платные места: по всем предметам требуется не\
+        \ менее 50 баллов.\n\nОчно-заочная и заочная формы обучения (бакалавриат и\
+        \ специалитет, кроме филиалов):\n– на бюджетные места: по всем предметам требуется\
+        \ не менее 50 баллов;\n– на платные места:\n  • математика — 40 баллов;\n\
+        \  • русский язык — 40 баллов;\n  • информатика и ИКТ — 44 балла;\n  • обществознание\
+        \ — 45 баллов;\n  • физика — 39 баллов;\n  • химия — 39 баллов;\n  • иностранный\
+        \ язык — 30 баллов;\n  • биология — 39 баллов;\n  • история — 36 баллов;\n\
+        \  • экономика — 45 баллов;\n  • право — 45 баллов.\nВажно: минимальный балл\
+        \ — это наименьшее количество баллов, которое необходимо набрать по каждому\
+        \ предмету, чтобы иметь возможность подать документы в вуз. В большинстве\
+        \ случаев его достаточно для поступления на платное обучение. \nПроходной\
+        \ балл — это минимальная сумма баллов, с которой абитуриент был зачислен на\
+        \ выбранное направление в прошлом году. В проходной балл включаются не только\
+        \ баллы ЕГЭ, но и баллы за индивидуальные достижения. Максимум за достижения\
+        \ — 10 баллов, плюс ещё 5 баллов могут дать целевикам. \n"
+    ir_metrics:
+        gold_chunks_id: 5
+        hit@1: 0.0
+        hit@3: 0.0
+        precision@1: 0.0
+        precision@3: 0.0
+        mrr: 0.0
+        first_relevant_rank: null
+    judge_metrics:
+        contextual_precision:
+            score: 0
+            reason: The score is 0.00 because all nodes ranked from 1 to 10 contain
+                irrelevant information and do not provide any data on the minimum
+                passing scores for each subject.
+        contextual_recall:
+            score: 0.0
+            reason: The score is 0.00 because none of the nodes in the retrieval context
+                provide information about specific minimum scores for different subjects
+                and forms of study as described in the expected output.
+-   id: 5
+    question: Есть ли в университете целевое обучение и как его получить?
+    response: ' Финансовый университет выделяет целевую квоту по специальности или
+        направлению подготовки в соответствии с квотой приёма на целевое обучение,
+        которая устанавливается Правительством Российской Федерации, органом государственной
+        власти субъекта Российской Федерации или органом местного самоуправления.
+
+
+        При приёме на обучение на места в пределах целевой квоты поступающий участвует
+        в конкурсе по одной детализированной целевой квоте по данной специальности
+        или направлению подготовки. Для этого необходимо подать заявление о приёме
+        в соответствии с предложением заказчика целевого обучения. Предложение может
+        быть размещено на цифровой платформе «Работа в России» или представлено заказчиком
+        напрямую в университет.
+
+
+        Если квота приёма на целевое обучение детализирована в интересах конкретных
+        заказчиков, Финансовый университет проводит отдельный конкурс по каждой детализированной
+        целевой квоте. Места, для которых не указаны заказчики, используются для проведения
+        конкурса в интересах заказчиков целевого обучения, не указанных по другим
+        детализированным целевым квотам.'
+    ground_truth: 'Целевое обучение может быть предусмотрено. Для его получения необходимо:
+
+        1) найти организацию-заказчика, готовую заключить договор о целевом обучении;
+
+        2) подать заявление в вуз с приложением договора;
+
+        3) участвовать в отдельном конкурсе на целевые места.
+
+        По программам бакалавриата и программам специалитета:
+
+        если гражданин подает заявление о приеме на обучение посредством Единого портала
+        государственных и муниципальных услуг (функций), то при подаче заявления о
+        приеме он сможет ознакомиться с предложениями заказчиков и подать заявку на
+        заключение договора о целевом обучении посредством Единого портала;
+
+        если гражданин подает заявление о приеме на обучение непосредственно в вуз
+        (лично, по почте или через информационную систему вуза), то он должен самостоятельно
+        ознакомиться с предложениями  заказчиков на Единой цифровой платформе в сфере
+        занятости и трудовых отношений «Работа в России» и подать заявку на заключение
+        договора о целевом обучении в вуз в период приема заявлений о приеме на обучение,
+        то есть с 20 июня до 20-25 июля (конкретный срок завершения приема заявлений
+        устанавливает вуз).
+
+        '
+    ir_metrics:
+        gold_chunks_id: 6
+        hit@1: 0.0
+        hit@3: 0.0
+        precision@1: 0.0
+        precision@3: 0.0
+        mrr: 0.0
+        first_relevant_rank: null
+    judge_metrics:
+        contextual_precision:
+            score: 0.95
+            reason: The score is 0.95 because the relevant nodes are ranked higher
+                than irrelevant nodes. The first four nodes provide information directly
+                related to obtaining targeted training, while the fifth node, although
+                relevant to university admissions, does not specifically address how
+                to get targeted training.
+        contextual_recall:
+            score: 0.0
+            reason: The score is 0.00 because none of the sentences in the expected
+                output relate to any specific node in the retrieval context.
+-   id: 6
+    question: Сколько бюджетных мест выделено на направлении Прикладное машинное обучение?
+    response: ' К сожалению, без доступа к актуальной информации о контрольных цифрах
+        приёма в Финансовый университет, я не могу ответить на ваш вопрос о количестве
+        бюджетных мест на направлении «Прикладное машинное обучение». Рекомендую обратиться
+        напрямую в приёмную комиссию Финансового университета для получения точной
+        информации.'
+    ground_truth: 'На направлении «Прикладное машинное обучение» выделено 113 бюджетных
+        мест.
+
+        Дополнительно предусмотрено 52 места по договорам об оказании платных образовательных
+        услуг.
+
+        '
+    ir_metrics:
+        gold_chunks_id: 7
+        hit@1: 0.0
+        hit@3: 0.0
+        precision@1: 0.0
+        precision@3: 0.0
+        mrr: 0.0
+        first_relevant_rank: null
+    judge_metrics:
+        contextual_precision:
+            score: 0
+            reason: The score is 0.00 because the first node in the retrieval contexts
+                indicates that no relevant information was provided about the number
+                of budget places allocated for the direction 'Applied Machine Learning',
+                and this node ranks highest.
+        contextual_recall:
+            score: 0.0
+            reason: The score is 0.00 because none of the sentences in the expected
+                output relate to any nodes in the retrieval context.
+-   id: 7
+    question: Какова стоимость обучения и есть ли скидки?
+    response: ' В представленном тексте нет информации о стоимости обучения и скидках.'
+    ground_truth: "Стоимость обучения по договору (контракту) составляет 190 000 –\
+        \ 762 500 рублей за год, в зависимости от направления подготовки и формы обучения.\
+        \ \nПредусмотрены Скидки и льготы (например, для победителей олимпиад, при\
+        \ высокой сумме баллов ЕГЭ и т.д.). С полным перечнем скидок можно ознакомиться\
+        \ на сайте.\n"
+    ir_metrics:
+        gold_chunks_id: 8
+        hit@1: 0.0
+        hit@3: 0.0
+        precision@1: 0.0
+        precision@3: 0.0
+        mrr: 0.0
+        first_relevant_rank: null
+    judge_metrics:
+        contextual_precision:
+            score: 0
+            reason: The score is 0.00 because the first node in the retrieval contexts
+                states that there is no relevant information provided about the cost
+                of education or discounts, and this node ranks highest.
+        contextual_recall:
+            score: 0.0
+            reason: The score is 0.00 because none of the sentences in the expected
+                output relate to any part of the retrieval context.
+-   id: 8
+    question: Можно ли подать документы онлайн, и как это сделать?
+    response: ' Из представленного текста можно сделать вывод, что Финансовый университет
+        принимает заявления о приёме на обучение и прилагаемые к ним документы, необходимые
+        для поступления, включая возможность подачи документов в электронной форме.
+        Для этого необходимо воспользоваться официальным сайтом университета. На сайте
+        публикуется информация о сроках приёма документов, условиях поступления и
+        другая важная информация. Однако конкретные инструкции по подаче документов
+        онлайн не предоставлены.'
+    ground_truth: 'Да, документы можно подать онлайн:
+
+        1) через портал Госуслуг (ЕПГУ);
+
+        2) через личный кабинет на сайте вуза.
+
+        Для этого нужно зарегистрироваться, заполнить заявление, загрузить электронные
+        образы документов (или подтвердить их наличие в государственных системах)
+        и отправить заявку. Инструкции размещены на сайтах ЕПГУ и вуза.
+
+        '
+    ir_metrics:
+        gold_chunks_id: 9
+        hit@1: 0.0
+        hit@3: 0.0
+        precision@1: 0.0
+        precision@3: 0.0
+        mrr: 0.0
+        first_relevant_rank: null
+    judge_metrics:
+        contextual_precision:
+            score: 0
+            reason: The score is 0.00 because all nodes in the retrieval contexts
+                rank equally low and do not address the question of submitting documents
+                online.
+        contextual_recall:
+            score: 0.0
+            reason: The score is 0.00 because the retrieval context does not include
+                information about submitting documents online, which is a key point
+                in sentences 1 and 2 of the expected output.
+-   id: 9
+    question: Когда будут опубликованы конкурсные списки и приказы о зачислении?
+    response: ' Конкурсные списки формируются по результатам приёма заявлений и документов
+        и проведения внутренних вступительных испытаний и публикуются на официальном
+        сайте и на ЕПГУ со дня начала приёма заявлений и документов. Они обновляются
+        при наличии изменений ежедневно до дня издания приказа (приказов) о зачислении
+        по соответствующему конкурсу включительно не менее 5 раз в сутки.'
+    ground_truth: 'Сроки публикации конкурсных списков и приказов о зачислении устанавливаются
+        вузом и указываются в правилах приёма. Обычно конкурсные списки обновляются
+        ежедневно в период приёма, а приказы о зачислении публикуются в июле–августе.
+        Точные даты смотрите на сайте вуза.
+
+        '
+    ir_metrics:
+        gold_chunks_id: 10
+        hit@1: 0.0
+        hit@3: 0.0
+        precision@1: 0.0
+        precision@3: 0.0
+        mrr: 0.0
+        first_relevant_rank: null
+    judge_metrics:
+        contextual_precision:
+            score: 0.9166666666666666
+            reason: The score is 0.92 because the relevant nodes (1st, 2nd and 4th)
+                are ranked higher than irrelevant node (3rd), providing accurate information
+                related to the publication of competitive lists and enrollment orders.
+        contextual_recall:
+            score: 0.6666666666666666
+            reason: The score is 0.67 because some information from the expected output
+                (about daily updates and July–August publications) aligns with the
+                retrieval context, but there are no specific dates mentioned in any
+                nodes.
+-   id: 10
+    question: Есть ли подготовительные курсы для абитуриентов и сколько они стоят?
+    response: ' В представленном тексте нет информации о наличии подготовительных
+        курсов для абитуриентов и их стоимости.'
+    ground_truth: 'Подготовительные курсы могут быть организованы вузом. Их стоимость,
+        сроки и форма обучения (очная, заочная, онлайн) публикуются на сайте вуза
+        (обычно в разделе «Абитуриентам» или «Подготовительные курсы»). Для записи
+        и уточнения деталей обратитесь в приёмную комиссию или на страницу курсов.
+
+        '
+    ir_metrics:
+        gold_chunks_id: 11
+        hit@1: 0.0
+        hit@3: 0.0
+        precision@1: 0.0
+        precision@3: 0.0
+        mrr: 0.0
+        first_relevant_rank: null
+    judge_metrics:
+        contextual_precision:
+            score: 0
+            reason: The score is 0.00 because all nodes in the retrieval contexts
+                are ranked equally and none of them provide relevant information about
+                preparatory courses for абитуриентов or their cost.
+        contextual_recall:
+            score: 0.0
+            reason: The score is 0.00 because none of the sentences in the expected
+                output relate to any nodes in the retrieval context.
+-   id: 11
+    question: Предоставляется ли общежитие иногородним студентам?
+    response: ' В представленном тексте нет информации о том, предоставляется ли общежитие
+        иногородним студентам.'
+    ground_truth: 'Да, общежитие обычно предоставляется иногородним студентам, обучающимся
+        по очной форме. Условия заселения, стоимость и порядок подачи заявки уточняются
+        в вузе (на сайте или в отделе по работе с общежитиями). Количество мест ограничено,
+        поэтому рекомендуется подавать заявление заранее.
+
+        Общежитие предоставляется, если место регистрации удалено от МКАД более, чем
+        на 50 км.
+
+        '
+    ir_metrics:
+        gold_chunks_id: 12
+        hit@1: 0.0
+        hit@3: 0.0
+        precision@1: 0.0
+        precision@3: 0.0
+        mrr: 0.0
+        first_relevant_rank: null
+    judge_metrics:
+        contextual_precision:
+            score: 0
+            reason: The score is 0.00 because the first node ranks irrelevant information
+                at the top, with a reason stating that 'the context does not address
+                the question about providing hostel accommodation to non-resident
+                students.'
+        contextual_recall:
+            score: 0.0
+            reason: The score is 0.00 because none of the sentences in the expected
+                output are supported by the nodes in the retrieval context.
+-   id: 12
+    question: Какие льготы и особые права при поступлении предусмотрены (олимпиады,
+        инвалидность и т.д.)?
+    response: ' Поступающим предоставляются особые права при приёме на обучение по
+        программам бакалавриата и программам специалитета в Финансовом университете:
+
+        * право на приём на места в пределах особой квоты в соответствии с частью
+        5 статьи 71 Федерального закона № 273-ФЗ;
+
+        * право на приём на места в пределах отдельной квоты в соответствии с частями
+        5.1 и 5.2 статьи 71 Федерального закона № 273-ФЗ;
+
+        * преимущественное право зачисления в соответствии с частью 9 статьи 71 Федерального
+        закона № 273-ФЗ;
+
+        * преимущественное право зачисления в соответствии с частью 10 статьи 71 Федерального
+        закона № 273-ФЗ.
+
+
+        Также предусмотрены специальные условия для поступающих с ограниченными возможностями
+        здоровья:
+
+        * создание специальных условий для сдачи внутренних вступительных испытаний
+        при необходимости (например, присутствие ассистента или использование технических
+        средств);
+
+        * особые требования к проведению вступительных испытаний в зависимости от
+        индивидуальных особенностей поступающих (например, рельефно-точечный шрифт
+        Брайля для слепых или увеличивающее устройство для слабовидящих).'
+    ground_truth: 'Льготы и особые права регулируются Федеральным законом №273‑ФЗ
+        (ст.71). К ним относятся:
+
+        1) приём без вступительных испытаний (для победителей олимпиад);
+
+        2) преимущественное право зачисления;
+
+        3) квоты для инвалидов, детей‑сирот и др.
+
+        Полный перечень и условия указаны в правилах приёма вуза и на его сайте.
+
+        '
+    ir_metrics:
+        gold_chunks_id: 13
+        hit@1: 0.0
+        hit@3: 0.0
+        precision@1: 0.0
+        precision@3: 0.0
+        mrr: 0.0
+        first_relevant_rank: null
+    judge_metrics:
+        contextual_precision:
+            score: 0.5833333333333333
+            reason: The score is 0.58 because the relevant nodes (second and third)
+                are ranked higher than some irrelevant ones (first and fourth), but
+                not all irrelevant nodes are clearly positioned below the relevant
+                ones.
+        contextual_recall:
+            score: 0.25
+            reason: The score is 0.25 because the expected output mentions specific
+                regulations and examples (node in retrieval context), but there are
+                no direct references to detailed conditions or lists of special rights
+                in the nodes provided.
+-   id: 13
+    question: Можно ли перевестись с платного обучения на бюджетное?
+    response: ' В данном контексте нет информации о переводе с платного обучения на
+        бюджетное. Для получения ответа на этот вопрос рекомендуется обратиться к
+        официальным источникам или представителям Финансового университета.'
+    ground_truth: 'Перевод с платного обучения на бюджетное возможен при наличии свободных
+        бюджетных мест и соблюдении условий, установленных вузом (например, отличная
+        успеваемость, отсутствие академической задолженности). Порядок и сроки перевода
+        публикуются на сайте вуза или в локальном нормативном акте.
+
+        '
+    ir_metrics:
+        gold_chunks_id: 14
+        hit@1: 0.0
+        hit@3: 0.0
+        precision@1: 0.0
+        precision@3: 0.0
+        mrr: 0.0
+        first_relevant_rank: null
+    judge_metrics:
+        contextual_precision:
+            score: 0
+            reason: The score is 0.00 because all nodes ranked are irrelevant to the
+                input question. They do not address the possibility of transferring
+                from paid to budget studies, instead focusing on admission procedures
+                and stages.
+        contextual_recall:
+            score: 0.0
+            reason: The score is 0.00 because none of the sentences in the expected
+                output relate to any of the nodes in the retrieval context.
+-   id: 14
+    question: Есть ли возможность учиться заочно/очно‑заочно на выбранной специальности?
+    response: ' В тексте указано, что Финансовый университет проводит приём раздельно
+        по формам обучения — очной, очно-заочной и заочной. Это означает, что у вас
+        есть возможность выбрать желаемую форму обучения при подаче заявления.'
+    ground_truth: 'Наличие заочной или очно‑заочной формы обучения зависит от направления
+        подготовки. Информацию о формах обучения по конкретной специальности можно
+        найти на сайте вуза (в описании программы) или уточнить в приёмной комиссии.
+
+        '
+    ir_metrics:
+        gold_chunks_id: 15
+        hit@1: 0.0
+        hit@3: 0.0
+        precision@1: 0.0
+        precision@3: 0.0
+        mrr: 0.0
+        first_relevant_rank: null
+    judge_metrics:
+        contextual_precision:
+            score: 0
+            reason: The score is 0.00 because all nodes ranked from 1 to 10 return
+                'no' and provide identical reasons stating that the context does not
+                offer any information about studying in a correspondence or part-time
+                distance learning format. This indicates that irrelevant nodes are
+                highly prioritized, leading to poor contextual precision.
+        contextual_recall:
+            score: 0.0
+            reason: The score is 0.00 because none of the sentences in the expected
+                output relate to any of the nodes in the retrieval context.
+-   id: 15
+    question: Какова продолжительность обучения по моей программе (бакалавриат/специалитет/магистратура)?
+    response: ' В представленном тексте нет информации о продолжительности обучения
+        по конкретной программе бакалавриата, специалитета или магистратуры.'
+    ground_truth: 'Срок обучения зависит от программы и формы обучения:
+
+        1) бакалавриат — обычно 4 года (очно), 4,5–5 лет (заочно/очно‑заочно);
+
+        2) специалитет — 5–6 лет;
+
+        3) магистратура — 2 года (очно), 2,5 года (заочно).
+
+        Точные сроки указаны на сайте вуза в описании образовательной программы.
+
+        '
+    ir_metrics:
+        gold_chunks_id: 16
+        hit@1: 0.0
+        hit@3: 0.0
+        precision@1: 0.0
+        precision@3: 0.0
+        mrr: 0.0
+        first_relevant_rank: null
+    judge_metrics:
+        contextual_precision:
+            score: 0
+            reason: The contextual precision score is 0.00 because all three nodes
+                ranked have 'no' verdicts with the same reason - they do not provide
+                information about the duration of study for bachelor's, specialist
+                and master's programs. This indicates that none of the retrieved contexts
+                are relevant to the input question.
+        contextual_recall:
+            score: 0.0
+            reason: The score is 0.00 because none of the nodes in the retrieval context
+                relate to the information about study duration provided in the expected
+                output.
+-   id: 16
+    question: Есть ли военная кафедра в университете?
+    response: ' В представленном контексте нет информации о наличии военной кафедры
+        в Финансовом университете.'
+    ground_truth: "Да, в Финансовом университете при Правительстве Российской Федерации\
+        \ (г. Москва) действует Военный учебный центр (ВУЦ), который заменил военную\
+        \ кафедру. \nОбучение осуществляется на очном отделении для подготовки сержантов\
+        \ (2 года) и офицеров запаса (2,5 года) на добровольной основе. \n"
+    ir_metrics:
+        gold_chunks_id: 17
+        hit@1: 0.0
+        hit@3: 0.0
+        precision@1: 0.0
+        precision@3: 0.0
+        mrr: 0.0
+        first_relevant_rank: null
+    judge_metrics:
+        contextual_precision:
+            score: 0
+            reason: The score is 0.00 because the first node ranks irrelevant information
+                at the top, providing no relevant details about the presence of a
+                military department in the university.
+        contextual_recall:
+            score: 0.0
+            reason: The score is 0.00 because none of the sentences in the expected
+                output relate to any part of the retrieval context.
+-   id: 17
+    question: Какие возможности стажировок и трудоустройства предлагает вуз?
+    response: ' В представленном тексте нет информации о возможностях стажировок и
+        трудоустройства для студентов или выпускников. Текст описывает правила приёма
+        в Финансовый университет при Правительстве Российской Федерации на обучение
+        по программам бакалавриата и специалитета.'
+    ground_truth: 'Вузы часто сотрудничают с работодателями и предлагают:
+
+        1) стажировки в компаниях‑партнёрах;
+
+        2) карьерные мероприятия (ярмарки вакансий, мастер‑классы);
+
+        3) помощь в трудоустройстве через центр карьеры.
+
+        Подробности можно найти на сайте вуза (раздел «Карьера» или «Партнёрство»)
+        или узнать в центре карьеры.
+
+        '
+    ir_metrics:
+        gold_chunks_id: 18
+        hit@1: 0.0
+        hit@3: 0.0
+        precision@1: 0.0
+        precision@3: 0.0
+        mrr: 0.0
+        first_relevant_rank: null
+    judge_metrics:
+        contextual_precision:
+            score: 0
+            reason: The score is 0.00 because all nodes are ranked equally and none
+                of them address the question about internship and employment opportunities
+                offered by the university.
+        contextual_recall:
+            score: 0.0
+            reason: The score is 0.00 because the retrieval context lacks information
+                related to cooperation with employers and career-related activities,
+                which are central themes in the expected output.
+-   id: 18
+    question: Можно ли поменять выбранное направление после подачи заявления?
+    response: ' В тексте не указано, можно ли поменять выбранное направление после
+        подачи заявления. Однако говорится о том, что поступающий указывает в заявлении
+        о приёме конкурсные группы, по которым он хочет быть зачисленным, и приоритеты
+        зачисления по каждой конкурсной группе. Это позволяет сделать вывод, что выбор
+        конкурсных групп (направлений) является частью процесса подачи заявления и
+        может быть ограничен правилами приёма.
+
+
+        Для получения точной информации необходимо обратиться к актуальным правилам
+        приёма или на официальный сайт Финансового университета.'
+    ground_truth: 'Да, после подачи заявления поступающий может изменить выбранные
+        направления и конкурсные группы, а также приоритеты зачисления и другие сведения.
+
+        Также допускается представление или отзыв приложенных документов (кроме документов,
+        поданных в электронном виде).
+
+
+        Все изменения можно вносить не позднее дня завершения приёма документов без
+        сдачи вступительных испытаний.
+
+        При этом после окончания приёма документов со сдачей вступительных испытаний
+        нельзя добавлять новые конкурсные группы, для которых требуется сдача внутренних
+        экзаменов, если они ранее не были указаны в заявлении.
+
+        При изменении приоритетов зачисления через ЕПГУ это можно делать не чаще одного
+        раза в 2 часа.
+
+        '
+    ir_metrics:
+        gold_chunks_id: 19
+        hit@1: 0.0
+        hit@3: 0.0
+        precision@1: 0.0
+        precision@3: 0.0
+        mrr: 0.0
+        first_relevant_rank: null
+    judge_metrics:
+        contextual_precision:
+            score: 0
+            reason: The score is 0.00 because all nodes ranked from 1 to 10 do not
+                address the question of changing directions after submitting an application,
+                resulting in no relevant information provided.
+        contextual_recall:
+            score: 0.25
+            reason: The score is 0.25 because only part of the expected output aligns
+                with the node in the retrieval context, while other parts do not have
+                relevant information in the nodes.
+-   id: 19
+    question: Где можно ознакомиться с учебными планами и программами вступительных
+        испытаний?
+    response: ' В представленном тексте нет информации об учебных планах и программах
+        вступительных испытаний. Однако указано, что списки подавших заявление и конкурсные
+        списки формируются в период приёма заявлений и документов и проведения внутренних
+        вступительных испытаний и публикуются на официальном сайте Финансового университета
+        и на ЕПГУ (единый портал государственных и муниципальных услуг).
+
+
+        Для получения более подробной информации о содержании учебных планов и программ
+        вступительных испытаний рекомендуется обратиться к официальному сайту Финансового
+        университета или другим официальным источникам.'
+    ground_truth: "Учебный план и программа вступительных испытаний зависят от выбранного\
+        \ направления и уровня обучения. \nУчебные планы и программы вступительных\
+        \ испытаний публикуются на официальном сайте вуза.\nТакже информацию можно\
+        \ запросить в приёмной комиссии.\n"
+    ir_metrics:
+        gold_chunks_id: 20
+        hit@1: 0.0
+        hit@3: 0.0
+        precision@1: 0.0
+        precision@3: 0.0
+        mrr: 0.0
+        first_relevant_rank: null
+    judge_metrics:
+        contextual_precision:
+            score: 0
+            reason: The score is 0.00 because all three nodes ranked provide information
+                that does not address the question about where to find the curriculum
+                and admission test programs. They only discuss unrelated topics such
+                as quotas, entrance procedures, and special conditions for disabled
+                applicants.
+        contextual_recall:
+            score: 0.0
+            reason: The score is 0.00 because none of the sentences in the expected
+                output are supported by the nodes in the retrieval context.
