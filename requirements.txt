@@ -1,11 +1,12 @@
 haystack-ai
-haystack-experimental>=0.15.0
+haystack-experimental
 ollama-haystack
 deepeval-haystack
 markdown-it-py 
 mdit_plain
 PyYAML
 pypdf
-sentence-transformers>=4.1.0
-huggingface_hub>=0.23.0
+sentence-transformers
+huggingface_hub
 python-dotenv
+python-telegram-bot

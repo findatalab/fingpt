@@ -1,42 +1,43 @@
 import os
 import dotenv
 
-dotenv.load_dotenv('yandex.env')
-if "OPENAI_API_KEY" not in os.environ:
-    raise ValueError("OPENAI_API_KEY not set in environment variables.")
-
 from haystack_experimental.chat_message_stores.in_memory import InMemoryChatMessageStore
 from haystack_experimental.components.retrievers import ChatMessageRetriever
 from haystack_experimental.components.writers import ChatMessageWriter
 from haystack.components.embedders import SentenceTransformersTextEmbedder
 from haystack.components.retrievers.in_memory import InMemoryEmbeddingRetriever
-
-# Chat History components
-message_store = InMemoryChatMessageStore()
-message_retriever = ChatMessageRetriever(message_store)
-message_writer = ChatMessageWriter(message_store)
-
 from haystack import Pipeline
 from haystack.components.builders import ChatPromptBuilder
 from haystack.components.converters import OutputAdapter
 from haystack.dataclasses import ChatMessage
 from haystack_integrations.components.generators.ollama import OllamaChatGenerator
 
-from haystack.components.converters import (
-    MarkdownToDocument,
-    PyPDFToDocument,
-    TextFileToDocument,
-)
 
-from preprocessor import document_store
+from components.preprocessor import document_store
+
+dotenv.load_dotenv("yandex.env")
+if "OPENAI_API_KEY" not in os.environ:
+    raise ValueError("OPENAI_API_KEY not set in environment variables.")
+
+try:
+    with open("components/system_prompt.txt", "r", encoding="utf-8") as file:
+        system_prompt = file.read()
+except FileNotFoundError:
+    raise ValueError("Error: The prompt template file was not found.")
+
+# Chat History components
+message_store = InMemoryChatMessageStore()
+message_retriever = ChatMessageRetriever(message_store)
+message_writer = ChatMessageWriter(message_store)
+
 
 pipeline = Pipeline()
 
 pipeline.add_component(
     "embedder",
     SentenceTransformersTextEmbedder(
-        model="sentence-transformers/all-MiniLM-L6-v2",
-        local_files_only=True),
+        model="deepvk/USER-base", local_files_only=False
+    ),
 )
 pipeline.add_component(
     "retriever", InMemoryEmbeddingRetriever(document_store=document_store)
@@ -47,15 +48,14 @@ pipeline.add_component(
     "prompt_builder",
     ChatPromptBuilder(
         template=[
-            ChatMessage.from_system(
-                "Ты консультант для поступающих в Финансовый Университет."
-            ),
+            ChatMessage.from_system(system_prompt),
             ChatMessage.from_user(
-                """ Контекст:
+                """ Используй контекст: 
 {% for document in documents %}
     {{ document.content }}
-{% endfor %}
-Вопрос: {{query}}"""
+{% endfor %} 
+
+Ответь на вопрос: {{query}}"""
             ),
         ],
         required_variables="*",
@@ -63,7 +63,10 @@ pipeline.add_component(
 )
 
 pipeline.add_component(
-    "llm", OllamaChatGenerator(model="gemma3", url="http://localhost:11434")
+    "llm",
+    OllamaChatGenerator(
+        model="yandex/YandexGPT-5-Lite-8B-instruct-GGUF", url="http://localhost:11434"
+    ),
 )
 
 
