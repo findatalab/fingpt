@@ -69,7 +69,7 @@ def get_contexts_and_responses(questions, pipeline):
     return all_contexts, responses
 
 
-gold_ids = [q['id'] for q in questions_dict]
+gold_ids = [list(map(int, q['gold_chunks_id'].split(", "))) for q in questions_dict]
 ground_truths = [q['answer'] for q in questions_dict]
 questions = [q['question'] for q in questions_dict]
 contexts, responses = get_contexts_and_responses(questions, pipeline)
@@ -77,36 +77,46 @@ contexts, responses = get_contexts_and_responses(questions, pipeline)
 # ----------------------------
 # IR metrics by chunk_id
 # ----------------------------
-def first_relevant_rank_by_chunk_id(ranked_contexts, gold_id):
+def first_relevant_rank_by_chunks_id(ranked_contexts: List[Dict], gold_chunks_id: List[int]) -> int | None:
     for item in ranked_contexts:
         meta = item.get("meta") or {}
-        if meta.get("chunk_id") == gold_id:
-            return item["rank"]
+        if meta.get("chunk_id") in gold_chunks_id:
+            return int(item["rank"])
     return None
 
 
-def hit_at_k_by_chunk_id(ranked_contexts, gold_id, k):
-    return 1.0 if first_relevant_rank_by_chunk_id(ranked_contexts[:k], gold_id) else 0.0
+def hit_at_k_by_chunks_id(ranked_contexts: List[Dict], gold_chunks_id: List[int], k: int) -> float:
+    return 1.0 if first_relevant_rank_by_chunks_id(ranked_contexts[:k], gold_chunks_id) else 0.0
 
 
-def precision_at_k_by_chunk_id(ranked_contexts, gold_id, k):
+def precision_at_k_by_chunks_id(ranked_contexts: List[Dict], gold_chunks_id: List[int], k: int) -> float:
     relevant = 0
     for item in ranked_contexts[:k]:
         meta = item.get("meta") or {}
-        if meta.get("chunk_id") == gold_id:
+        if meta.get("chunk_id") in gold_chunks_id:
             relevant += 1
     return relevant / k
 
 
-def mrr_by_chunk_id(ranked_contexts, gold_id):
-    r = first_relevant_rank_by_chunk_id(ranked_contexts, gold_id)
+def recall_at_k_by_chunks_id(ranked_contexts: List[Dict], gold_chunks_id: List[int], k: int) -> float:
+    relevant = 0
+    for item in ranked_contexts[:k]:
+        meta = item.get("meta") or {}
+        if meta.get("chunk_id") in gold_chunks_id:
+            relevant += 1
+    return relevant / len(gold_chunks_id)
+
+
+def reciprocal_rank_by_chunks_id(ranked_contexts: List[Dict], gold_chunks_id: List[int]) -> float:
+    r = first_relevant_rank_by_chunks_id(ranked_contexts, gold_chunks_id)
     return 0.0 if r is None else 1.0 / r
 
 
 # ----------------------------
 # LLM-as-judge metrics
 # ----------------------------
-judge_model = OllamaModel(model="yandex/YandexGPT-5-Lite-8B-instruct-GGUF", timeout=180)
+model_name = "yandex/YandexGPT-5-Lite-8B-instruct-GGUF"
+judge_model = OllamaModel(model=model_name, timeout=180)
 
 contextual_precision_metric = ContextualPrecisionMetric(
     model=judge_model, async_mode=False
@@ -122,46 +132,57 @@ contextual_recall_metric = ContextualRecallMetric(
 all_results: List[Dict[str, Any]] = []
 
 # For summary stats
-ir_hit1, ir_hit3 = [], []
-ir_p1, ir_p3 = [], []
-ir_mrr = []
-judge_prec = []
-judge_rec = []
+K_VALUES = (3, 5)
+hit_at_k = {k: [] for k in K_VALUES}
+precision_at_k = {k: [] for k in K_VALUES}
+recall_at_k = {k: [] for k in K_VALUES}
+mrr = 0.0
 
 for i, question in enumerate(questions):
     print(f"\nEvaluating question {i + 1}/{len(questions)}")
 
     ranked_ctx = contexts[i]
     ctx_texts = [c["content"] for c in ranked_ctx]
-    gold_chunks_id = gold_ids[i]
+    q_gold_ids = gold_ids[i]
 
     # --- IR metrics ---
-    ir_metrics = {
-        "gold_chunks_id": gold_chunks_id,
-        "hit@1": None,
-        "hit@3": None,
-        "precision@1": None,
-        "precision@3": None,
-        "mrr": None,
-        "first_relevant_rank": None,
+    ir_metrics: Dict[str, Any] = {
+        "gold_chunks_id": q_gold_ids,
     }
 
-    if gold_chunks_id is not None:
-        r = first_relevant_rank_by_chunk_id(ranked_ctx, gold_chunks_id)
+    if q_gold_ids is not None:
+        reciprocal_rank = reciprocal_rank_by_chunks_id(ranked_ctx, q_gold_ids)
+        mrr += reciprocal_rank
+        ir_metrics['reciprocal_rank'] = reciprocal_rank
 
-        ir_metrics.update({
-            "first_relevant_rank": r,
-            "hit@1": hit_at_k_by_chunk_id(ranked_ctx, gold_chunks_id, 1),
-            "hit@3": hit_at_k_by_chunk_id(ranked_ctx, gold_chunks_id, 3),
-            "precision@1": precision_at_k_by_chunk_id(ranked_ctx, gold_chunks_id, 1),
-            "precision@3": precision_at_k_by_chunk_id(ranked_ctx, gold_chunks_id, 3),
-            "mrr": mrr_by_chunk_id(ranked_ctx, gold_chunks_id),
-        })
+        for k in K_VALUES:
+            ir_metrics.update({
+                f"hit@{k}": hit_at_k_by_chunks_id(ranked_ctx, q_gold_ids, k),
+                f"precision@{k}": precision_at_k_by_chunks_id(ranked_ctx, q_gold_ids, k),
+                f"recall@{k}": recall_at_k_by_chunks_id(ranked_ctx, q_gold_ids, k)
+            })
+
+    print(f"Reciprocal Rank: {ir_metrics['reciprocal_rank']}")
+    for k in K_VALUES:
+        print(
+            f"Hit@{k}={ir_metrics[f"hit@{k}"]} | "
+            f"Precision@{k}={ir_metrics[f"precision@{k}"]} | "
+            f"Recall@{k}={ir_metrics[f"recall@{k}"]}"
+        )
 
     # --- LLM-as-judge metrics ---
     judge_metrics: Dict[str, Any] = {
         "contextual_precision": {"score": None, "reason": None},
         "contextual_recall": {"score": None, "reason": None},
+    }
+
+    result = {
+        "id": i,
+        "question": question,
+        "response": responses[i],
+        "ground_truth": ground_truths[i],
+        "ir_metrics": ir_metrics,
+        "judge_metrics": judge_metrics,
     }
 
     try:
@@ -184,59 +205,19 @@ for i, question in enumerate(questions):
             "reason": contextual_recall_metric.reason,
         }
 
-        print(
-            f"IR → Hit@1={ir_metrics['hit@1']} | "
-            f"Hit@3={ir_metrics['hit@3']} | "
-            f"P@1={ir_metrics['precision@1']:.3f} | "
-            f"P@3={ir_metrics['precision@3']:.3f} | "
-            f"MRR={ir_metrics['mrr']:.3f} | "
-            f"Rank={ir_metrics['first_relevant_rank']}"
-        )
         print(f"✅ ContextualPrecision: {contextual_precision_metric.score:.3f}")
         print(f"🧠 Reason: {contextual_precision_metric.reason}")
         print(f"✅ ContextualRecall: {contextual_recall_metric.score:.3f}")
         print(f"🧠 Reason: {contextual_recall_metric.reason}")
 
-        result = {
-            "id": i,
-            "question": question,
-            # "contexts": ctx_texts, # contexts[i],
-            "response": responses[i],
-            "ground_truth": ground_truths[i],
-            "ir_metrics": ir_metrics,
-            "judge_metrics": judge_metrics,
-        }
-
-        all_results.append(result)
-
-        # collect summary
-        ir_hit1.append(ir_metrics["hit@1"])
-        ir_hit3.append(ir_metrics["hit@3"])
-        ir_p1.append(ir_metrics["precision@1"])
-        ir_p3.append(ir_metrics["precision@3"])
-        ir_mrr.append(ir_metrics["mrr"])
-        judge_prec.append(judge_metrics["contextual_precision"]["score"])
-        judge_rec.append(judge_metrics["contextual_recall"]["score"])
-
     except Exception as e:
-        print(f"❌ Evaluation failed: {e}")
-        all_results.append(
-            {
-                "question": question,
-                "error": str(e),
-                "ir_metrics": ir_metrics,
-                "judge_metrics": judge_metrics,
-            }
-        )
+        print(f"❌ Error evaluating LLM-as-a-judge metric: {e}")
+        result["error"] = str(e)
 
-        # still collect IR metrics
-        ir_hit1.append(ir_metrics["hit@1"])
-        ir_hit3.append(ir_metrics["hit@3"])
-        ir_p1.append(ir_metrics["precision@1"])
-        ir_p3.append(ir_metrics["precision@3"])
-        ir_mrr.append(ir_metrics["mrr"])
-
+    all_results.append(result)
     time.sleep(1)
+
+mrr = mrr / len(questions)
 
 # ----------------------------
 # Results
@@ -244,6 +225,7 @@ for i, question in enumerate(questions):
 print("\n" + "=" * 80)
 print("FINAL RESULTS (per question)")
 print("=" * 80)
+print("MRR:", mrr)
 
 for r in all_results:
     print("─" * 50)
@@ -251,9 +233,11 @@ for r in all_results:
     if "error" in r:
         print("Error:", r["error"])
     print("IR metrics:", r.get("ir_metrics"))
-    print("Judge metrics:", r.get("judge_metrics"))
+    print("LLM-as-a-judge metrics:", r.get("judge_metrics"))
 
-report_name = f"{datetime.datetime.today().strftime('%Y-%m-%d-%H-%M-%S')}_" + Path(TEST_FILE).stem + ".yaml"
+all_results.insert(0, {"MRR": mrr})
+
+report_name = f"{datetime.datetime.today().strftime('%Y-%m-%d-%H-%M-%S')}_" + model_name + Path(TEST_FILE).stem + ".yaml"
 
 with open(f"reports/{report_name}", "w", encoding="utf-8") as f:
     yaml.dump(
