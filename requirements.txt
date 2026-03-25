@@ -10,3 +10,5 @@ sentence-transformers
 huggingface_hub
 python-dotenv
 python-telegram-bot
+flask
+flask_sqlalchemy

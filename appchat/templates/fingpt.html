@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with LLM</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="chat-page">
+    <main class="app-shell">
+        <section class="chat-container" aria-label="Chat">
+            <header class="chat-header">
+                <div class="chat-logo-safe">
+                    <img class="chat-logo" src="{{ url_for('static', filename='logo.png') }}" alt="FinDataLab logo">
+                </div>
+                <div class="chat-title-group">
+                    <p class="chat-eyebrow">FinGPT</p>
+                    <h1>Ассистент для поступающих в Финансовый университет</h1>
+                    <a class="chat-home-link" href="{{ url_for('home') }}">О лаборатории</a>
+                </div>
+            </header>
+
+            <div id="chat-box" class="chat-box" aria-live="polite">
+                {% for entry in chat_history %}
+                    <div class="message user">
+                        <span class="sender">Вы: </span>
+                        <div class="message-body">{{ entry.user_message }}</div>
+                    </div>
+                    <div class="message llm">
+                        <span class="sender">FinGPT: </span>
+                        <div class="message-body" data-markdown="true">{{ entry.llm_reply }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <form id="chat-form" autocomplete="off">
+                <label class="sr-only" for="user-input">Type your message</label>
+                <input type="text" id="user-input" placeholder="Type your message..." required>
+                <button type="submit">Send</button>
+            </form>
+        </section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

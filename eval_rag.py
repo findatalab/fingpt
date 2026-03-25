@@ -7,6 +7,9 @@ from deepeval.metrics import ContextualPrecisionMetric, ContextualRecallMetric
 from deepeval.test_case import LLMTestCase
 import yaml
 
+from components.rag import pipeline
+from haystack.components.builders.answer_builder import AnswerBuilder
+
 
 TEST_FILE = "test/questions20.yaml"
 
@@ -22,8 +25,6 @@ except yaml.YAMLError as e:
 
 chat_history_id = "test_1"
 
-from components.rag import pipeline
-from haystack.components.builders.answer_builder import AnswerBuilder
 
 pipeline.add_component("answer_builder", AnswerBuilder())
 pipeline.connect("llm.replies", "answer_builder.replies")
