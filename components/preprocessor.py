@@ -7,7 +7,6 @@ from haystack.components.joiners import DocumentJoiner
 from haystack.components.embedders import SentenceTransformersDocumentEmbedder
 from haystack import Pipeline
 from haystack.document_stores.in_memory import InMemoryDocumentStore
-from pathlib import Path
 
 from components.doc_logger import DocLogger
 
