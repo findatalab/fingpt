@@ -16,7 +16,7 @@ class DocLogger:
 
         for i, d in enumerate(documents[: self.show]):
             content_len = len(d.content or "")
-            print(f"[{i}] content_len={content_len} meta={d.meta}")
+            # print(f"[{i}] content_len={content_len} meta={d.meta}")
 
             if self.show_content:
                 print((d.content or "")[: self.show_content].replace("\n", "\\n"))

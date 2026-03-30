@@ -11,6 +11,8 @@ def _normalize(value: str) -> str:
 
 
 def price_function(program_name: str | None = None, **kwargs) -> str:
+    """Returns tuition price and metadata by exact value from column 
+    'Наименование образовательной программы'."""
     program_name = program_name or kwargs.get("Наименование образовательной программы")
     if not program_name:
         return json.dumps(

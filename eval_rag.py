@@ -7,7 +7,7 @@ from deepeval.metrics import ContextualPrecisionMetric, ContextualRecallMetric
 from deepeval.test_case import LLMTestCase
 import yaml
 
-from components.rag import pipeline
+from pipelines.finenroll.rag import pipeline
 from haystack.components.builders.answer_builder import AnswerBuilder
 
 
@@ -60,12 +60,6 @@ def get_contexts_and_responses(questions, pipeline):
 
         all_contexts.append(ranked_contexts)
         responses.append(response["answer_builder"]["answers"][0].data)
-
-        # print(f"\nQuestion {i+1}: {question}")
-        # for c in ranked_contexts:
-        #     print(f"  Rank {c['rank']} | Score={c['score']} | meta={c['meta']}")
-        # print("Response:", responses[-1])
-        # print("-" * 60)
 
     return all_contexts, responses
 

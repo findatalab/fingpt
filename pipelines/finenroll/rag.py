@@ -6,7 +6,7 @@ from haystack_experimental.components.retrievers import ChatMessageRetriever
 from haystack_experimental.components.writers import ChatMessageWriter
 from haystack.components.embedders import SentenceTransformersTextEmbedder
 from haystack.components.retrievers.in_memory import InMemoryEmbeddingRetriever
-from haystack import AsyncPipeline
+from haystack import Pipeline
 from haystack.components.builders import ChatPromptBuilder
 from haystack.components.converters import OutputAdapter
 from haystack.dataclasses import ChatMessage
@@ -17,7 +17,7 @@ from .preprocessor import document_store
 from .tools import price_tool  # type: ignore
 
 try:
-    with open("pipelines/fingpt_agent/system_prompt.txt", "r", encoding="utf-8") as file:
+    with open("pipelines/finenroll/system_prompt.txt", "r", encoding="utf-8") as file:
         system_prompt = file.read()
 except FileNotFoundError:
     raise ValueError("Error: The prompt template file was not found.")
@@ -28,7 +28,7 @@ message_retriever = ChatMessageRetriever(message_store)
 message_writer = ChatMessageWriter(message_store)
 
 
-pipeline = AsyncPipeline()
+pipeline = Pipeline()
 
 pipeline.add_component(
     "embedder",
