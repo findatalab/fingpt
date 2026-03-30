@@ -2,6 +2,7 @@ haystack-ai
 haystack-experimental
 ollama-haystack
 deepeval-haystack
+hayhooks
 markdown-it-py 
 mdit_plain
 PyYAML
