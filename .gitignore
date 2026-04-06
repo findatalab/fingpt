@@ -11,3 +11,4 @@ __pycache__/
 .deepeval
 # Temporary files
 tmp/
+instance/

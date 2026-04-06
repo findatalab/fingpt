@@ -2,6 +2,11 @@ from components.rag import pipeline
 
 chat_history_id = "user_123_session_1"
 
+
+with open('components/pipeline.yml', "w") as file:
+    pipeline.dump(file)
+
+
 while True:
     question = input("Enter your question or Q to exit.\n🧑 ")
     if question == "Q":

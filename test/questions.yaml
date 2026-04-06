@@ -1,4 +1,5 @@
 - id: 1
+  gold_chunks_id: 1, 2, 3
   question: "Какие документы необходимы для подачи заявления на поступление?"
   references: ["https://www.fa.ru/upload/constructor/0ce/v2jc8sysg7jyunar03dqfit1gfj7veyn/Prikaz-po-osnovnoy-deyatelnosti-_-0056_o-ot-20.01.2026-Ob-utv.-Pravil-priema-v-fed.-gos.-obraz.-byudzh.-uch.-vys.-obrazov.-_Finanso-_4574345-v1_stranitsy_2.pdf"]
   answer: |
@@ -16,6 +17,7 @@
     Документы подаются в оригинале или копии (электронного образа) без заверения. При подаче через ЕПГУ документы считаются представленными, если их данные подтверждены в государственных системах.
 
 - id: 2
+  gold_chunks_id: 1, 2, 3
   question: "Каковы сроки приёма документов в этом году?"
   references: ["https://www.fa.ru/upload/constructor/0ce/v2jc8sysg7jyunar03dqfit1gfj7veyn/Prikaz-po-osnovnoy-deyatelnosti-_-0056_o-ot-20.01.2026-Ob-utv.-Pravil-priema-v-fed.-gos.-obraz.-byudzh.-uch.-vys.-obrazov.-_Finanso-_4574345-v1_stranitsy_2.pdf"]
   answer: |
@@ -48,6 +50,7 @@
     – зачисление завершается не позднее 18 августа 2026 года.
 
 - id: 3
+  gold_chunks_id: 1, 2, 3
   question: "Сколько направлений (специальностей) можно выбрать при подаче заявления?"
   references: ["https://www.fa.ru/upload/constructor/0ce/v2jc8sysg7jyunar03dqfit1gfj7veyn/Prikaz-po-osnovnoy-deyatelnosti-_-0056_o-ot-20.01.2026-Ob-utv.-Pravil-priema-v-fed.-gos.-obraz.-byudzh.-uch.-vys.-obrazov.-_Finanso-_4574345-v1_stranitsy_2.pdf"]
   answer: |
