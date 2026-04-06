@@ -8,7 +8,7 @@ from haystack.components.embedders import SentenceTransformersDocumentEmbedder
 from haystack import Pipeline
 from haystack.document_stores.in_memory import InMemoryDocumentStore
 
-from components.doc_logger import DocLogger
+from .doc_logger import DocLogger
 
 document_store = InMemoryDocumentStore()
 

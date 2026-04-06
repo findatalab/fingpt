@@ -13,14 +13,11 @@ from haystack.dataclasses import ChatMessage
 from haystack_integrations.components.generators.ollama import OllamaChatGenerator
 
 
-from components.preprocessor import document_store
-
-dotenv.load_dotenv("yandex.env")
-if "OPENAI_API_KEY" not in os.environ:
-    raise ValueError("OPENAI_API_KEY not set in environment variables.")
+from .preprocessor import document_store
+from .tools import price_tool  # type: ignore
 
 try:
-    with open("components/system_prompt.txt", "r", encoding="utf-8") as file:
+    with open("pipelines/finenroll/system_prompt.txt", "r", encoding="utf-8") as file:
         system_prompt = file.read()
 except FileNotFoundError:
     raise ValueError("Error: The prompt template file was not found.")
@@ -65,7 +62,9 @@ pipeline.add_component(
 pipeline.add_component(
     "llm",
     OllamaChatGenerator(
-        model="yandex/YandexGPT-5-Lite-8B-instruct-GGUF", url="http://localhost:11434"
+        model="qwen3.5",
+        url="http://localhost:11434",
+        tools=[price_tool],
     ),
 )
 
