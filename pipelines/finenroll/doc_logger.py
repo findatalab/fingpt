@@ -1,3 +1,4 @@
+# todo use logger instead of print
 from haystack import component
 from haystack.dataclasses import Document
 from typing import List
