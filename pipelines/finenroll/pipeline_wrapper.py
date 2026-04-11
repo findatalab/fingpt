@@ -7,7 +7,7 @@ and returns a direct response from the agent.
 
 from haystack.dataclasses import ChatMessage
 from hayhooks import BasePipelineWrapper
-from .rag import pipeline as rag_pipeline  # type: ignore
+from .rag import pipeline as rag_pipeline, run_finenroll_query  # type: ignore
 
 
 class PipelineWrapper(BasePipelineWrapper):
@@ -32,16 +32,4 @@ class PipelineWrapper(BasePipelineWrapper):
     def run_chat_completion(self, model: str, messages: list[dict], body: dict) -> str:
         chat_history_id = self._chat_history_id_from_body(body)
         question = self._get_last_user_message(messages)
-
-        result = self.pipeline.run(
-            data={
-                "embedder": {"text": question},
-                "prompt_builder": {"query": question},
-                "message_retriever": {"chat_history_id": chat_history_id},
-                "message_writer": {"chat_history_id": chat_history_id},
-            },
-            include_outputs_from={"llm"},
-        )
-
-        replies: list[ChatMessage] = result.get("llm", {}).get("replies", [])
-        return replies[0].text if replies else ""
+        return run_finenroll_query(question, chat_history_id=chat_history_id)
