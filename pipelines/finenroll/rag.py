@@ -11,8 +11,9 @@ from haystack.dataclasses import ChatMessage
 from haystack_integrations.components.generators.ollama import OllamaChatGenerator
 
 
-from .preprocessor import document_store
+
 from .tools import places_tool, price_tool
+from ..preprocessor.preprocessor import DOCUMENT_STORE
 
 BASE_MODEL = "qwen3.5"
 TOOLS = [price_tool, places_tool]
@@ -39,7 +40,7 @@ pipeline.add_component(
     ),
 )
 pipeline.add_component(
-    "retriever", InMemoryEmbeddingRetriever(document_store=document_store)
+    "retriever", InMemoryEmbeddingRetriever(document_store=DOCUMENT_STORE)
 )
 
 # components to communicate with an LLM
