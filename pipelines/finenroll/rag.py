@@ -1,3 +1,5 @@
+import logging
+
 from haystack_experimental.chat_message_stores.in_memory import InMemoryChatMessageStore
 from haystack_experimental.components.retrievers import ChatMessageRetriever
 from haystack_experimental.components.writers import ChatMessageWriter
@@ -10,13 +12,14 @@ from haystack.components.tools import ToolInvoker
 from haystack.dataclasses import ChatMessage
 from haystack_integrations.components.generators.ollama import OllamaChatGenerator
 
-
+from .doc_logger import DocLogger
 from .preprocessor import document_store
 from .tools import places_tool, price_tool
 
 BASE_MODEL = "qwen3.5"
 TOOLS = [price_tool, places_tool]
 MAX_TOOL_ITERATIONS = 3
+logging.basicConfig(level=logging.DEBUG) # вынести потом в общий конфигурационный файл, либо в main
 
 try:
     with open("pipelines/finenroll/system_prompt.txt", "r", encoding="utf-8") as file:
@@ -40,6 +43,16 @@ pipeline.add_component(
 )
 pipeline.add_component(
     "retriever", InMemoryEmbeddingRetriever(document_store=document_store)
+)
+
+pipeline.add_component(
+    "retrieved_docs_logger",
+    DocLogger(
+        label="Retrieved documents",
+        show=3,
+        show_content=300,
+        log_level=logging.DEBUG,
+    ),
 )
 
 # components to communicate with an LLM
@@ -84,7 +97,8 @@ pipeline.add_component(
 
 # connections
 pipeline.connect("embedder.embedding", "retriever.query_embedding")
-pipeline.connect("retriever", "prompt_builder.documents")
+pipeline.connect("retriever.documents", "retrieved_docs_logger.documents")
+pipeline.connect("retrieved_docs_logger.documents", "prompt_builder.documents")
 
 pipeline.connect("prompt_builder.prompt", "message_retriever.current_messages")
 pipeline.connect("prompt_builder.prompt", "message_joiner.prompt")
@@ -105,9 +119,12 @@ def run_finenroll_query(
     retriever_result = pipeline.get_component("retriever").run(
         query_embedding=embedder_result["embedding"]
     )
+    logger_result = pipeline.get_component("retrieved_docs_logger").run(
+        documents=retriever_result["documents"]
+    )
     prompt_result = pipeline.get_component("prompt_builder").run(
         query=question,
-        documents=retriever_result["documents"],
+        documents=logger_result["documents"],
     )
     current_turn_messages = prompt_result["prompt"]
     history_result = pipeline.get_component("message_retriever").run(
