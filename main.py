@@ -1,9 +1,9 @@
-from components.rag import pipeline
+from pipelines.finenroll.rag import pipeline
 
 chat_history_id = "user_123_session_1"
 
 
-with open('components/pipeline.yml', "w") as file:
+with open('pipelines/finenroll/pipeline.yml', "w") as file:
     pipeline.dump(file)
 
 
