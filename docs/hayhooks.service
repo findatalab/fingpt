@@ -1,0 +1,13 @@
+[Unit]
+Description=Hayhook fingpt Service
+After=network.target 
+[Service]
+Type=simple
+User=developer 
+Group=developer 
+WorkingDirectory=/home/developer/findatalab/fingpt/ 
+ExecStart=/home/developer/findatalab/fingpt/.venv/bin/hayhooks run 
+Restart=on-failure 
+
+[Install]
+WantedBy=multi-user.target 

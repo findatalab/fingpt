@@ -11,7 +11,7 @@
 
 - Python 3.12
 - Установленные библиотеки из `requirements.txt`
-- Запущенный Ollama с моделью (например, `gemma3`) 
+- Запущенный Ollama с моделью, поддерживающей tool calling (например, `qwen3.5`)
 - Документы в директории `data_files/`
 
 ### Шаги установки
@@ -23,7 +23,7 @@
 
 2. Запустите Ollama и загрузите модель:
    ```bash
-   ollama pull gemma3
+   ollama pull qwen3.5
    ```
 
 3. Поместите документы в директорию `data_files/`
@@ -31,7 +31,7 @@
 
 ## Использование
 
-1. Запустите чат-бот:
+### Чат-бот в терминале:
 ```bash
 python main.py
 ```
@@ -39,27 +39,29 @@ python main.py
 3. Получите ответ от чат-бота
 4. Для выхода введите "Q"
 
-## Flask app
-
-Для запуска веб приложения debug
-
+### Endpoint для веб приложения
+Запускает точку доступа к чату на http://localhost:1416 
+Используется как компонент системы с отдельным фронтендом. 
 ```sh
-flask --app appchat --debug run
+hayhooks run
 ```
 
-Production
-```sh
-gunicorn --bind=0.0.0.0:8000 "appchat:create_app()" --daemon
-```
+### Production
 
+```sh
+sudo cp docs/hayhooks.service /etc/systemd/system/hayhooks.service
+sudo systemctl daemon-reload
+sudo systemctl enable hayhooks.service
+sudo systemctl start hayhooks.service
+```
 
 ## Архитектура
 
-Проект использует архитектуру RAG (Retrieval-Augmented Generation):
+Проект использует архитектуру RAG (Retrieval-Augmented Generation) и function calling (tools):
 1. Вопрос поступающего преобразуется в эмбеддинг
 2. Система ищет релевантные документы в базе знаний
-3. Контекст и вопрос передаются в LLM
-4. LLM генерирует ответ
+3. При необходимости LLM вызывает tolls
+4. Собранные данные используются LLM для генерирации ответа
 5. Чат-история сохраняется для последующих вопросов
 
 ## Лицензия
