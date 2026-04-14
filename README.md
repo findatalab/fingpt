@@ -40,19 +40,18 @@ python main.py
 4. Для выхода введите "Q"
 
 ### Endpoint для веб приложения
-Запускает точку доступа к чату на http://localhost:1416 
+Запускает точку доступа к чату на http://localhost:1416/chat/complitions
 Используется как компонент системы с отдельным фронтендом. 
+
+Debug mode:
 ```sh
-hayhooks run
+python api.py
 ```
 
 ### Production
 
 ```sh
-sudo cp docs/hayhooks.service /etc/systemd/system/hayhooks.service
-sudo systemctl daemon-reload
-sudo systemctl enable hayhooks.service
-sudo systemctl start hayhooks.service
+gunicorn --bind=0.0.0.0:1416 "api:app" --daemon
 ```
 
 ## Архитектура

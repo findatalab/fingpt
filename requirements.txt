@@ -13,3 +13,4 @@ python-dotenv
 python-telegram-bot
 flask
 flask_sqlalchemy
+gunicorn

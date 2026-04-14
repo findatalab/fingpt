@@ -53,7 +53,7 @@ class StructuredDocsPreprocessor:
     def __to_document(self, content: Dict, file_name: str) -> Document:
         doc_id = content.get("id")
         text = content.get("text")
-        meta = content.get("meta")
+        header = content.get("header")
 
         return Document(
             content=text,
@@ -61,6 +61,6 @@ class StructuredDocsPreprocessor:
                 "source_type": SourceType.STRUCTURED.value,
                 "file_name": file_name,
                 "doc_id": doc_id,
-                "meta": meta
+                "header": header,
             },
         )

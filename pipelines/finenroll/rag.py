@@ -13,8 +13,6 @@ from haystack.dataclasses import ChatMessage
 from haystack_integrations.components.generators.ollama import OllamaChatGenerator
 
 from .doc_logger import DocLogger
-from .preprocessor import document_store
-
 from .tools import places_tool, price_tool
 from ..preprocessor.preprocessor import DOCUMENT_STORE
 
