@@ -6,7 +6,6 @@ from haystack.tools import Tool
 PRICE_CSV_PATH = (
     Path(__file__).resolve().parents[2]
     / "data_files"
-    / "enroll"
     / "tools"
     / "price.csv"
 )
@@ -15,7 +14,6 @@ PRICE_CSV_PATH = (
 PLACES_CSV_PATH = (
     Path(__file__).resolve().parents[2]
     / "data_files"
-    / "enroll"
     / "tools"
     / "places.csv"
 )
