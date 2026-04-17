@@ -53,7 +53,7 @@ except FileNotFoundError:
 
 # Chat History components
 message_store = InMemoryChatMessageStore()
-message_retriever = ChatMessageRetriever(message_store)
+# message_retriever = ChatMessageRetriever(message_store)
 message_writer = ChatMessageWriter(message_store)
 
 
@@ -110,25 +110,25 @@ pipeline.add_component(
 
 
 # components for chat history retrieval and storage
-pipeline.add_component("message_retriever", ChatMessageRetriever(message_store))
-pipeline.add_component("message_writer", ChatMessageWriter(message_store))
-pipeline.add_component(
-    "message_joiner",
-    OutputAdapter(
-        template="{{ prompt + replies }}", output_type=list[ChatMessage], unsafe=True
-    ),
-)
+# pipeline.add_component("message_retriever", ChatMessageRetriever(message_store))
+# pipeline.add_component("message_writer", ChatMessageWriter(message_store))
+# pipeline.add_component(
+#     "message_joiner",
+#     OutputAdapter(
+#         template="{{ prompt + replies }}", output_type=list[ChatMessage], unsafe=True
+#     ),
+# )
 
-# connections
-pipeline.connect("embedder.embedding", "retriever.query_embedding")
-pipeline.connect("retriever.documents", "retrieved_docs_logger.documents")
-pipeline.connect("retrieved_docs_logger.documents", "prompt_builder.documents")
+# # connections
+# pipeline.connect("embedder.embedding", "retriever.query_embedding")
+# pipeline.connect("retriever.documents", "retrieved_docs_logger.documents")
+# pipeline.connect("retrieved_docs_logger.documents", "prompt_builder.documents")
 
-pipeline.connect("prompt_builder.prompt", "message_retriever.current_messages")
-pipeline.connect("prompt_builder.prompt", "message_joiner.prompt")
-pipeline.connect("message_retriever.messages", "llm.messages")
-pipeline.connect("llm.replies", "message_joiner.replies")
-pipeline.connect("message_joiner", "message_writer.messages")
+# pipeline.connect("prompt_builder.prompt", "message_retriever.current_messages")
+# pipeline.connect("prompt_builder.prompt", "message_joiner.prompt")
+# pipeline.connect("message_retriever.messages", "llm.messages")
+# pipeline.connect("llm.replies", "message_joiner.replies")
+# pipeline.connect("message_joiner", "message_writer.messages")
 
 
 tool_invoker = ToolInvoker(tools=TOOLS)
@@ -151,11 +151,12 @@ def run_finenroll_query(
         documents=logger_result["documents"],
     )
     current_turn_messages = prompt_result["prompt"]
-    history_result = pipeline.get_component("message_retriever").run(
-        chat_history_id=chat_history_id,
-        current_messages=current_turn_messages,
-    )
-    messages_for_llm = history_result["messages"]
+    # history_result = pipeline.get_component("message_retriever").run(
+    #     chat_history_id=chat_history_id,
+    #     current_messages=current_turn_messages,
+    # )
+    # messages_for_llm = history_result["messages"]
+    messages_for_llm = current_turn_messages
 
     llm = pipeline.get_component("llm")
     llm_result = llm.run(messages=messages_for_llm)
@@ -223,10 +224,10 @@ def run_finenroll_query(
             getattr(reply, "tool_calls", None),
         )
 
-    pipeline.get_component("message_writer").run(
-        chat_history_id=chat_history_id,
-        messages=current_turn_messages + [reply],
-    )
+    # pipeline.get_component("message_writer").run(
+    #     chat_history_id=chat_history_id,
+    #     messages=current_turn_messages + [reply],
+    # )
 
     function_call_logger.info(
         "Final reply returned for question=%s tool_iterations=%d reply_text=%s",
