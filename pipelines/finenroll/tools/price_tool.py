@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 from haystack.tools import Tool
 
-PRICE_CSV_PATH = Path(__file__).resolve().parents[2] / "data_files" / "price.csv"
+PRICE_CSV_PATH = Path("data_files/tools/price.csv")
 
 
 def _normalize(value: str) -> str:
@@ -11,7 +11,7 @@ def _normalize(value: str) -> str:
 
 
 def price_function(program_name: str | None = None, **kwargs) -> str:
-    """Returns tuition price and metadata by exact value from column 
+    """Возвращает стоимость обучения и метаданные по точному значению из столбца
     'Наименование образовательной программы'."""
     program_name = program_name or kwargs.get("Наименование образовательной программы")
     if not program_name:
@@ -86,7 +86,7 @@ def price_function(program_name: str | None = None, **kwargs) -> str:
 price_tool = Tool(
     name="price_tool",
     description=(
-        "Returns tuition price and metadata by exact value from column "
+        "Возвращает стоимость обучения и метаданные по точному значению из столбца "
         "'Наименование образовательной программы'."
     ),
     parameters={
@@ -105,3 +105,13 @@ price_tool = Tool(
     },
     function=price_function,
 )
+
+
+def test_price_tool():
+    test_program = "Прикладное машинное обучение"
+    result = price_function(program_name=test_program)
+    print(result)
+
+
+if __name__ == "__main__":
+    test_price_tool()

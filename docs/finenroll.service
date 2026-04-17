@@ -1,0 +1,13 @@
+[Unit]
+Description=Fingpt Service for enrolls
+After=network.target 
+[Service]
+Type=simple
+User=developer 
+Group=developer 
+WorkingDirectory=/home/developer/findatalab/fingpt/ 
+ExecStart=/home/developer/findatalab/fingpt/.venv/bin/gunicorn  
+Restart=on-failure 
+
+[Install]
+WantedBy=multi-user.target 
