@@ -19,16 +19,16 @@ from .tools.places_tool import places_tool
 from .tools.price_tool import price_tool
 from ..preprocessor.preprocessor import DOCUMENT_STORE
 
-BASE_MODEL = "qwen3.5"
+BASE_MODEL = "OxW/Qwen3-8b-ru-i1:latest"
 TOOLS = [price_tool, places_tool]
 MAX_TOOL_ITERATIONS = 3
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
 LOG_DIR = ROOT_DIR / "log"
-LOG_DIR.mkdir(parents=True, exist_ok=True)
 
 start_time = datetime.now().strftime("%Y-%m-%d--%H-%M-%S")
-log_filename = f"finenroll_tool_calls_{BASE_MODEL}_{start_time}.log"
+safe_model_name = BASE_MODEL.replace("/", "_")
+log_filename = f"finenroll_tool_calls_{safe_model_name}_{start_time}.log"
 
 logging.basicConfig(
     format="%(asctime)s %(levelname)s [%(name)s] %(message)s",
