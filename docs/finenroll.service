@@ -6,7 +6,7 @@ Type=simple
 User=developer 
 Group=developer 
 WorkingDirectory=/home/developer/findatalab/fingpt/ 
-ExecStart=/home/developer/findatalab/fingpt/.venv/bin/g run 
+ExecStart=/home/developer/findatalab/fingpt/.venv/bin/gunicorn  
 Restart=on-failure 
 
 [Install]

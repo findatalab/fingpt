@@ -1,4 +1,6 @@
+from datetime import datetime
 import logging
+from pathlib import Path
 
 from haystack_experimental.chat_message_stores.in_memory import InMemoryChatMessageStore
 from haystack_experimental.components.retrievers import ChatMessageRetriever
@@ -20,7 +22,28 @@ from ..preprocessor.preprocessor import DOCUMENT_STORE
 BASE_MODEL = "qwen3.5"
 TOOLS = [price_tool, places_tool]
 MAX_TOOL_ITERATIONS = 3
-logging.basicConfig(level=logging.DEBUG) # вынести потом в общий конфигурационный файл, либо в main
+
+ROOT_DIR = Path(__file__).resolve().parents[2]
+LOG_DIR = ROOT_DIR / "log"
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+
+start_time = datetime.now().strftime("%Y-%m-%d--%H-%M-%S")
+log_filename = f"finenroll_tool_calls_{BASE_MODEL}_{start_time}.log"
+
+logging.basicConfig(
+    format="%(asctime)s %(levelname)s [%(name)s] %(message)s",
+    level=logging.DEBUG,
+)
+
+function_call_logger = logging.getLogger("fingpt.function_calls")
+function_call_handler = logging.FileHandler(LOG_DIR / log_filename, encoding="utf-8")
+function_call_handler.setLevel(logging.DEBUG)
+function_call_handler.setFormatter(
+    logging.Formatter("%(asctime)s %(levelname)s [%(name)s] %(message)s")
+)
+if not function_call_logger.handlers:
+    function_call_logger.addHandler(function_call_handler)
+function_call_logger.propagate = False
 
 try:
     with open("pipelines/finenroll/system_prompt.txt", "r", encoding="utf-8") as file:
@@ -138,15 +161,46 @@ def run_finenroll_query(
     llm_result = llm.run(messages=messages_for_llm)
     replies: list[ChatMessage] = llm_result.get("replies", [])
     if not replies:
+        function_call_logger.info(
+            "No replies returned from LLM for question=%s chat_history_id=%s",
+            question,
+            chat_history_id,
+        )
         return ""
 
     reply = replies[0]
     tool_iterations = 0
 
+    function_call_logger.info(
+        "LLM reply received: tool_calls=%s tool_iterations=%d question=%s",
+        getattr(reply, "tool_calls", None),
+        tool_iterations,
+        question,
+    )
+
     while getattr(reply, "tool_calls", None) and tool_iterations < MAX_TOOL_ITERATIONS:
+        function_call_logger.info(
+            "Invoking tool iteration %d for reply tool_calls=%s",
+            tool_iterations + 1,
+            getattr(reply, "tool_calls", None),
+        )
+
         tool_result = tool_invoker.run(messages=[reply])
         tool_messages = tool_result.get("tool_messages", [])
+
+        function_call_logger.info(
+            "Tool result iteration %d: tool_messages=%s tool_result_keys=%s",
+            tool_iterations + 1,
+            [m.text for m in tool_messages],
+            list(tool_result.keys()),
+        )
+
         if not tool_messages:
+            function_call_logger.warning(
+                "No tool messages returned on iteration %d for question=%s",
+                tool_iterations + 1,
+                question,
+            )
             break
 
         current_turn_messages = current_turn_messages + [reply] + tool_messages
@@ -155,13 +209,30 @@ def run_finenroll_query(
         llm_result = llm.run(messages=messages_for_llm)
         replies = llm_result.get("replies", [])
         if not replies:
+            function_call_logger.warning(
+                "No replies returned from LLM after tool invocation iteration %d",
+                tool_iterations + 1,
+            )
             break
 
         reply = replies[0]
         tool_iterations += 1
+        function_call_logger.info(
+            "LLM responded after tool iteration %d: tool_calls=%s",
+            tool_iterations,
+            getattr(reply, "tool_calls", None),
+        )
 
     pipeline.get_component("message_writer").run(
         chat_history_id=chat_history_id,
         messages=current_turn_messages + [reply],
     )
+
+    function_call_logger.info(
+        "Final reply returned for question=%s tool_iterations=%d reply_text=%s",
+        question,
+        tool_iterations,
+        reply.text,
+    )
+
     return reply.text or ""

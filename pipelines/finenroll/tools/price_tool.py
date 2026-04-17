@@ -3,12 +3,7 @@ import json
 from pathlib import Path
 from haystack.tools import Tool
 
-PRICE_CSV_PATH = (
-    Path(__file__).resolve().parents[2]
-    / "data_files"
-    / "tools"
-    / "price.csv"
-)
+PRICE_CSV_PATH = Path("data_files/tools/price.csv")
 
 
 def _normalize(value: str) -> str:
@@ -110,3 +105,13 @@ price_tool = Tool(
     },
     function=price_function,
 )
+
+
+def test_price_tool():
+    test_program = "Прикладное машинное обучение"
+    result = price_function(program_name=test_program)
+    print(result)
+
+
+if __name__ == "__main__":
+    test_price_tool()

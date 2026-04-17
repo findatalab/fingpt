@@ -4,29 +4,24 @@ from pathlib import Path
 from haystack.tools import Tool
 
 
-PLACES_CSV_PATH = (
-    Path(__file__).resolve().parents[2]
-    / "data_files"
-    / "tools"
-    / "places.csv"
-)
+PLACES_CSV_PATH = Path("data_files/tools/places.csv")
 
 def _normalize(value: str) -> str:
     return " ".join(value.strip().lower().split())
 
 
 def places_function(
-    direction_name: str | None = None,
+    program_name: str | None = None,
     **kwargs,
 ) -> str:
-    """Возвращает количество бюджетных и контрактных мест, а также метаданные по точному значению из `direction_name`."""
-    search_value = direction_name or kwargs.get("Наименование направления подготовки") or kwargs.get("Направление обучения")
+    """Возвращает количество бюджетных и контрактных мест, а также метаданные по точному значению из `program_name`."""
+    search_value = program_name or kwargs.get("Наименование программы подготовки") or kwargs.get("Программа обучения")
     if not search_value:
         return json.dumps(
             {
                 "error": "Argument is required",
                 "required_any_of": [
-                    "direction_name"
+                    "program_name"
                 ],
             },
             ensure_ascii=False,
@@ -52,7 +47,7 @@ def places_function(
             if not row_direction_name:
                 continue
 
-            if _normalize(row_direction_name) == normalized_query:
+            if _normalize(row_program_name) == normalized_query:
                 matches.append(
                     {
                         "study_form": row.get("study_form"),
@@ -71,7 +66,7 @@ def places_function(
                 "query": search_value,
                 "direction_name": search_value,
                 "matches": [],
-                "message": "Не найдено ни одного направления с таким точным названием",
+                "message": "Не найдено ни одной специальности с таким точным названием",
             },
             ensure_ascii=False,
         )
@@ -91,25 +86,26 @@ places_tool = Tool(
     name="places_tool",
     description=(
         "Возвращает количество бюджетных и контрактных мест, а также метаданные по точному"
-        "значению из столбца 'direction_name' (направление обучения)."
+        "значению из столбца 'program_name' (программа или специальность обучения)."
     ),
     parameters={
         "type": "object",
         "properties": {
-            "direction_name": {
+            "program_name": {
                 "type": "string",
-                "description": "Значение колонки 'direction_name'",
-            },
-            "Наименование направления подготовки": {
-                "type": "string",
-                "description": "Точное название направления обучения",
-            },
-            "Направление обучения": {
-                "type": "string",
-                "description": "Алиас для названия направления обучения",
-            },
+                "description": "Значение колонки 'program_name'",
+            }
         },
-        "required": ["direction_name"],
+        "required": ["program_name"],
     },
     function=places_function,
 )
+
+def test_places_tool():
+    test_program = "Юриспруденция"
+    result = places_function(program_name=test_program)
+    print(result)
+
+
+if __name__ == "__main__":
+    test_places_tool()
