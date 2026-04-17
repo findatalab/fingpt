@@ -19,7 +19,7 @@ from .tools.places_tool import places_tool
 from .tools.price_tool import price_tool
 from ..preprocessor.preprocessor import DOCUMENT_STORE
 
-BASE_MODEL = "OxW/Qwen3-8b-ru-i1:latest"
+BASE_MODEL = "qwen3.5:latest"
 TOOLS = [price_tool, places_tool]
 MAX_TOOL_ITERATIONS = 3
 
