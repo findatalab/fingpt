@@ -13,7 +13,8 @@ from haystack.dataclasses import ChatMessage
 from haystack_integrations.components.generators.ollama import OllamaChatGenerator
 
 from .doc_logger import DocLogger
-from .tools import places_tool, price_tool
+from .tools.places_tool import places_tool
+from .tools.price_tool import price_tool
 from ..preprocessor.preprocessor import DOCUMENT_STORE
 
 BASE_MODEL = "qwen3.5"
