@@ -9,7 +9,7 @@ from pipelines.finenroll.rag import BASE_MODEL, run_finenroll_query
 # scoring model configuration
 MODEL_JUDGE = "yandex/YandexGPT-5-Lite-8B-instruct-GGUF"
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434")
-TEST_FILE = "test/questions20.yaml"
+TEST_FILE = "test/questions30.yaml"
 
 
 def load_questions(path):
