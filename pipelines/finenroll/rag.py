@@ -1,6 +1,7 @@
 from datetime import datetime
 import logging
 from pathlib import Path
+import re
 
 from haystack_experimental.chat_message_stores.in_memory import InMemoryChatMessageStore
 from haystack_experimental.components.retrievers import ChatMessageRetriever
@@ -19,7 +20,7 @@ from .tools.places_tool import places_tool
 from .tools.price_tool import price_tool
 from ..preprocessor.preprocessor import DOCUMENT_STORE
 
-BASE_MODEL = "OxW/Qwen3-8b-ru-i1:latest"
+BASE_MODEL = "qwen3.5:latest"
 TOOLS = [price_tool, places_tool]
 MAX_TOOL_ITERATIONS = 3
 SAFE_MODEL_NAME = BASE_MODEL.replace("/", "_").replace(":", "_")
@@ -44,6 +45,15 @@ function_call_handler.setFormatter(
 if not function_call_logger.handlers:
     function_call_logger.addHandler(function_call_handler)
 function_call_logger.propagate = False
+
+
+
+def strip_thinking_tags(text: str) -> str:
+    """Remove <think>...</think> tags from LLM response."""
+    if not text:
+        return text
+    return re.sub(r'<think>.*?</think>', '', text, flags=re.DOTALL).strip()
+
 
 try:
     with open("pipelines/finenroll/system_prompt.txt", "r", encoding="utf-8") as file:
@@ -235,4 +245,4 @@ def run_finenroll_query(
         reply.text,
     )
 
-    return reply.text or ""
+    return strip_thinking_tags(reply.text or "")
