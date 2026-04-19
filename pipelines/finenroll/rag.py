@@ -15,12 +15,12 @@ from haystack.dataclasses import ChatMessage
 from haystack_integrations.components.generators.ollama import OllamaChatGenerator
 
 from .doc_logger import DocLogger
-from .tools.places_tool import places_tool
+from .tools.empty_tool import empty_tool
 from .tools.price_tool import price_tool
 from ..preprocessor.preprocessor import DOCUMENT_STORE
 
 BASE_MODEL = "qwen3.5:latest"
-TOOLS = [price_tool, places_tool]
+TOOLS = [empty_tool]
 MAX_TOOL_ITERATIONS = 3
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
