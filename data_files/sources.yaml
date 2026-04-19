@@ -9,4 +9,4 @@ data_sources:
 
   documents:
     - path: "data_files/documents/PravilaPriema2026_v1.txt"
-      enabled: true
+      enabled: false
