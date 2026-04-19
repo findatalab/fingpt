@@ -4,8 +4,8 @@ data_sources:
       enabled: false
 
   structured_docs:
-    - path: "data_files/structured_docs/pravila_2026_example.yaml"
-      enabled: false
+    - path: "data_files/structured_docs/pravila_2026.yaml"
+      enabled: true
 
   documents:
     - path: "data_files/documents/PravilaPriema2026_v1.txt"
