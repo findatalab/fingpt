@@ -7,6 +7,7 @@ from haystack import Document, Pipeline
 from haystack.components.embedders import SentenceTransformersDocumentEmbedder
 from haystack.components.writers import DocumentWriter
 
+from pipelines.config import DOCUMENT_WRITE_POLICY
 from pipelines.preprocessor.sources_loader import SourceType
 
 
@@ -16,7 +17,7 @@ class StructuredDocsPreprocessor:
     def __init__(self, embedder_name, document_store):
         self.pipeline = Pipeline()
         self.pipeline.add_component("document_embedder", SentenceTransformersDocumentEmbedder(model=embedder_name, local_files_only=True))
-        self.pipeline.add_component("document_writer", DocumentWriter(document_store=document_store))
+        self.pipeline.add_component("document_writer", DocumentWriter(document_store=document_store, policy=DOCUMENT_WRITE_POLICY))
 
         self.pipeline.connect("document_embedder.documents", "document_writer.documents")
 
@@ -51,7 +52,8 @@ class StructuredDocsPreprocessor:
         )
 
     def __to_document(self, content: Dict, file_name: str) -> Document:
-        doc_id = content.get("id")
+        filename_without_extension = file_name.split(".")[0]
+        chunk_id = f"{filename_without_extension}_{content.get('id')}"
         text = content.get("text")
         header = content.get("header")
 
@@ -60,7 +62,7 @@ class StructuredDocsPreprocessor:
             meta={
                 "source_type": SourceType.STRUCTURED.value,
                 "file_name": file_name,
-                "doc_id": doc_id,
+                "chunk_id": chunk_id,
                 "header": header,
             },
         )
