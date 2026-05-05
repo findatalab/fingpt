@@ -1,12 +1,12 @@
 data_sources:
   faq:
-    - path: "data_files/faq/01-04-2026-faq.yaml"
-      enabled: false
+    - path: "data_files/faq/faq1.yaml"
+      enabled: true
 
   structured_docs:
     - path: "data_files/structured_docs/pravila_2026.yaml"
-      enabled: true
+      enabled: false
 
   documents:
     - path: "data_files/documents/PravilaPriema2026_v1.txt"
-      enabled: true
+      enabled: false

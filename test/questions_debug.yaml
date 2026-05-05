@@ -1,6 +1,8 @@
 - id: 1
-  gold_chunks_id: 1, 2, 3
+  gold_chunks_id: ['faq1_1']
   question: "Какие документы необходимы для подачи заявления на поступление?"
+#  question: "Какие документы необходимы для поступления?"
+#  question: "Какие документы нужно приложить к заявлению?"
   references: ["https://www.fa.ru/upload/constructor/0ce/v2jc8sysg7jyunar03dqfit1gfj7veyn/Prikaz-po-osnovnoy-deyatelnosti-_-0056_o-ot-20.01.2026-Ob-utv.-Pravil-priema-v-fed.-gos.-obraz.-byudzh.-uch.-vys.-obrazov.-_Finanso-_4574345-v1_stranitsy_2.pdf"]
   answer: |
     Для подачи заявления на программы бакалавриата и специалитета поступающий предоставляет:
@@ -17,8 +19,11 @@
     Документы подаются в оригинале или копии (электронного образа) без заверения. При подаче через ЕПГУ документы считаются представленными, если их данные подтверждены в государственных системах.
 
 - id: 2
-  gold_chunks_id: 1, 2, 3
+  gold_chunks_id: ['faq1_2']
   question: "Каковы сроки приёма документов в этом году?"
+#  question: "До какого числа принимают документы в приёмной комиссии?"
+#  question: "До какого числа можно подать документы?"
+#  question: "В какие даты нужно подавать документы?"
   references: ["https://www.fa.ru/upload/constructor/0ce/v2jc8sysg7jyunar03dqfit1gfj7veyn/Prikaz-po-osnovnoy-deyatelnosti-_-0056_o-ot-20.01.2026-Ob-utv.-Pravil-priema-v-fed.-gos.-obraz.-byudzh.-uch.-vys.-obrazov.-_Finanso-_4574345-v1_stranitsy_2.pdf"]
   answer: |
     Сроки приёма документов в 2026 году зависят от типа мест и формы поступления.
@@ -50,8 +55,9 @@
     – зачисление завершается не позднее 18 августа 2026 года.
 
 - id: 3
-  gold_chunks_id: 1, 2, 3
+  gold_chunks_id: ['faq1_3']
   question: "Сколько направлений (специальностей) можно выбрать при подаче заявления?"
+#  question: "Какое количество специальностей можно указать в заявлении"
   references: ["https://www.fa.ru/upload/constructor/0ce/v2jc8sysg7jyunar03dqfit1gfj7veyn/Prikaz-po-osnovnoy-deyatelnosti-_-0056_o-ot-20.01.2026-Ob-utv.-Pravil-priema-v-fed.-gos.-obraz.-byudzh.-uch.-vys.-obrazov.-_Finanso-_4574345-v1_stranitsy_2.pdf"]
   answer: |
     При подаче заявления поступающий может выбрать до 5 специальностей и (или) направлений подготовки.
