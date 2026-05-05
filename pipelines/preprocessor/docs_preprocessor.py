@@ -9,6 +9,7 @@ from haystack.components.preprocessors import DocumentSplitter, DocumentCleaner
 from haystack.components.routers import FileTypeRouter
 from haystack.components.joiners import DocumentJoiner
 
+from pipelines.config import DOCUMENT_WRITE_POLICY
 from pipelines.finenroll.doc_logger import DocLogger
 
 
@@ -47,7 +48,7 @@ class DocsPreprocessor:
         )
         pipeline.add_component("log_after_split", DocLogger("after_split", show=10))
         pipeline.add_component("document_embedder", SentenceTransformersDocumentEmbedder(model=embedder_name, local_files_only=True))
-        pipeline.add_component("document_writer", DocumentWriter(document_store=document_store))
+        pipeline.add_component("document_writer", DocumentWriter(document_store=document_store, policy=DOCUMENT_WRITE_POLICY))
 
         pipeline.connect("file_type_router.text/plain", "text_file_converter.sources")
         pipeline.connect("file_type_router.application/pdf", "pypdf_converter.sources")

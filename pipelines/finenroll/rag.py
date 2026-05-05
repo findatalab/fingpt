@@ -2,25 +2,25 @@ from datetime import datetime
 import logging
 from pathlib import Path
 import re
+from typing import Any
 
 from haystack_experimental.chat_message_stores.in_memory import InMemoryChatMessageStore
 from haystack_experimental.components.retrievers import ChatMessageRetriever
 from haystack_experimental.components.writers import ChatMessageWriter
 from haystack.components.embedders import SentenceTransformersTextEmbedder
-from haystack.components.retrievers.in_memory import InMemoryEmbeddingRetriever
 from haystack import Pipeline
 from haystack.components.builders import ChatPromptBuilder
 from haystack.components.converters import OutputAdapter
 from haystack.components.tools import ToolInvoker
 from haystack.dataclasses import ChatMessage
 from haystack_integrations.components.generators.ollama import OllamaChatGenerator
+from haystack_integrations.components.retrievers.chroma import ChromaEmbeddingRetriever
 
 from .doc_logger import DocLogger
 from .tools.places_tool import places_tool
 from .tools.price_tool import price_tool
-from ..preprocessor.preprocessor import DOCUMENT_STORE
+from ..config import BASE_MODEL, EMBEDDER_MODEL, RETRIEVER_TOP_K, DOCUMENT_STORE
 
-BASE_MODEL = "qwen3.5:latest"
 TOOLS = [price_tool, places_tool]
 MAX_TOOL_ITERATIONS = 3
 SAFE_MODEL_NAME = BASE_MODEL.replace("/", "_").replace(":", "_")
@@ -61,7 +61,7 @@ try:
 except FileNotFoundError:
     raise ValueError("Error: The prompt template file was not found.")
 
-# Chat History components
+# Chat History components - replace with db
 message_store = InMemoryChatMessageStore()
 message_retriever = ChatMessageRetriever(message_store)
 message_writer = ChatMessageWriter(message_store)
@@ -72,11 +72,15 @@ pipeline = Pipeline()
 pipeline.add_component(
     "embedder",
     SentenceTransformersTextEmbedder(
-        model="deepvk/USER-base", local_files_only=False
+        model=EMBEDDER_MODEL, local_files_only=True
     ),
 )
 pipeline.add_component(
-    "retriever", InMemoryEmbeddingRetriever(document_store=DOCUMENT_STORE)
+    "retriever",
+    ChromaEmbeddingRetriever(
+        document_store=DOCUMENT_STORE,
+        top_k=RETRIEVER_TOP_K,
+    )
 )
 
 pipeline.add_component(
@@ -147,7 +151,8 @@ tool_invoker = ToolInvoker(tools=TOOLS)
 def run_finenroll_query(
     question: str,
     chat_history_id: str = "default_chat_session",
-) -> str:
+    return_retrieved_documents: bool = False,
+) -> str | dict[str, Any]:
     """Run the admissions pipeline with tool execution enabled."""
     embedder_result = pipeline.get_component("embedder").run(text=question)
     retriever_result = pipeline.get_component("retriever").run(
@@ -176,6 +181,12 @@ def run_finenroll_query(
             question,
             chat_history_id,
         )
+        if return_retrieved_documents:
+            return {
+                "answer": "",
+                "documents": logger_result["documents"],
+            }
+
         return ""
 
     reply = replies[0]
@@ -245,4 +256,12 @@ def run_finenroll_query(
         reply.text,
     )
 
-    return strip_thinking_tags(reply.text or "")
+    answer = strip_thinking_tags(reply.text or "")
+
+    if return_retrieved_documents:
+        return {
+            "answer": answer,
+            "documents": logger_result["documents"],
+        }
+
+    return answer

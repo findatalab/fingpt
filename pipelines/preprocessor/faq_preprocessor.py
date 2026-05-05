@@ -7,6 +7,7 @@ from haystack import Document, Pipeline
 from haystack.components.embedders import SentenceTransformersDocumentEmbedder
 from haystack.components.writers import DocumentWriter
 
+from pipelines.config import DOCUMENT_WRITE_POLICY
 from pipelines.preprocessor.sources_loader import SourceType
 
 logger = logging.getLogger(__name__)
@@ -15,7 +16,7 @@ class FaqPreprocessor:
     def __init__(self, embedder_name, document_store):
         self.pipeline = Pipeline()
         self.pipeline.add_component("document_embedder", SentenceTransformersDocumentEmbedder(model=embedder_name, local_files_only=True))
-        self.pipeline.add_component("document_writer", DocumentWriter(document_store=document_store))
+        self.pipeline.add_component("document_writer", DocumentWriter(document_store=document_store, policy=DOCUMENT_WRITE_POLICY))
 
         self.pipeline.connect("document_embedder.documents", "document_writer.documents")
 
@@ -50,18 +51,20 @@ class FaqPreprocessor:
         )
 
     def __to_document(self, faq_dict: Dict, file_name: str) -> Document:
-        faq_id = faq_dict.get("id")
+        filename_without_extension = file_name.split(".")[0]
+        chunk_id = f"{filename_without_extension}_{faq_dict.get('id')}"
         question = faq_dict.get("question", "")
         answer = faq_dict.get("answer", "")
         references = faq_dict.get("references", [])
 
         return Document(
-            content=answer,
+            content=f"Вопрос: {question}.\nОтвет: {answer}",
             meta={
                 "source_type": SourceType.FAQ.value,
                 "file_name": file_name,
-                "question_id": faq_id,
+                "chunk_id": chunk_id,
                 "question": question,
+                "answer": answer,
                 "references": references,
             },
         )
